@@ -1,9 +1,9 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,24 +11,43 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity(name = "endereco")
 public class Endereco {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+
     @NotNull
+    @Column(name = "id_usuario", nullable = false)
     private int idUsuario;
-    @NotNull
+
+    @NotBlank
+    @Size(min = 8, max = 8, message = "Tamanho Inesperado para o CEP.")
+    @Column(name = "cep", nullable = false)
     private String cep;
-    @NotNull
+
+    @Size(max = 255)
+    @Column(name = "country")
     private String country;
-    @NotNull
+
+    @Size(max = 255)
+    @Column(name = "state")
     private String state;
-    @NotNull
+
+    @Size(max = 255)
+    @Column(name = "city")
     private String city;
-    @NotNull
+
+    @Size(max = 255)
+    @Column(name = "adress")
     private String adress;
-    @NotNull
+
+    @Column(name = "number")
     private int number;
+
+    @Size(max = 255)
+    @Column(name = "complement")
     private String complement;
 
     /*
@@ -46,5 +65,10 @@ public class Endereco {
         this.city = city;
         this.adress = adress;
         this.number = number;
+    }
+
+    public Endereco(int idUsuario, String cep) {
+        this.idUsuario = idUsuario;
+        this.cep = cep;
     }
 }

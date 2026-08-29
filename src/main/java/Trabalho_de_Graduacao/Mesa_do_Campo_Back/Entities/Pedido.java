@@ -1,9 +1,8 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,14 +12,24 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity(name = "pedido")
 public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+
     @NotNull
+    @Column(name = "id_usuario", nullable = false)
     private int idUsuario;
+
     @NotNull
+    @Column(name = "preco_total", nullable = false, precision = 10, scale = 2)
     private double precoTotal;
+
+    @NotNull
+    @PastOrPresent
+    @Column(name = "data_compra", nullable = false)
     private LocalDateTime dataCompra;
 
     public Pedido(int idUsuario, double precoTotal) {

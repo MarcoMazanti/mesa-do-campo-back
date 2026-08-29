@@ -1,5 +1,6 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities;
 
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Enum.StatusPedido;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,19 +10,47 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity(name = "item_pedido")
 public class ItemPedido {
-    @EmbeddedId
-    private ItemPedidoPK id; // Chave composta
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+
     @NotNull
+    @Column(name = "id_pedido", nullable = false)
+    private int idPedido;
+
+    @NotNull
+    @Column(name = "id_produto", nullable = false)
+    private int idProduto;
+
+    @NotNull
+    @Column(name = "quantidade", nullable = false)
     private int quantidade;
+
     @NotNull
-    private double precoUnitario;
+    @Column(name = "preco", precision = 10, scale = 2, nullable = false)
+    private double preco;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private StatusPedido status;
 
-    public ItemPedido(ItemPedidoPK id, int quantidade, double precoUnitario) {
-        this.id = id;
+    public ItemPedido(int idPedido, int idProduto, int quantidade, double preco, StatusPedido status) {
+        this.idPedido = idPedido;
+        this.idProduto = idProduto;
         this.quantidade = quantidade;
-        this.precoUnitario = precoUnitario;
+        this.preco = preco;
+        this.status = status;
+    }
+
+    public ItemPedido(int idPedido, int idProduto, int quantidade, double preco) {
+        this.idPedido = idPedido;
+        this.idProduto = idProduto;
+        this.quantidade = quantidade;
+        this.preco = preco;
         status = StatusPedido.PENDENTE;
     }
 }

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -25,14 +26,14 @@ public class Pedido {
 
     @NotNull
     @Column(name = "preco_total", nullable = false, precision = 10, scale = 2)
-    private double precoTotal;
+    private BigDecimal precoTotal;
 
     @NotNull
     @PastOrPresent
     @Column(name = "data_compra", nullable = false)
     private LocalDateTime dataCompra;
 
-    public Pedido(int idUsuario, double precoTotal) {
+    public Pedido(int idUsuario, BigDecimal precoTotal) {
         this.idUsuario = idUsuario;
         this.precoTotal = precoTotal;
         dataCompra = LocalDateTime.now();

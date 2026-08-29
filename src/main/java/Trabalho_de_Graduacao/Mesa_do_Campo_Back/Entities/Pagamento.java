@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -38,9 +40,9 @@ public class Pagamento {
 
     @NotNull
     @Column(name = "valor_pago", precision = 10, scale = 2, nullable = false)
-    private double valorPago;
+    private BigDecimal valorPago;
 
-    public Pagamento(int idPedido, TipoPagamento metodoPagamento, StatusPagamento status, LocalDateTime dataPagamento, double valorPago) {
+    public Pagamento(int idPedido, TipoPagamento metodoPagamento, StatusPagamento status, LocalDateTime dataPagamento, BigDecimal valorPago) {
         this.idPedido = idPedido;
         this.metodoPagamento = metodoPagamento;
         this.status = status;

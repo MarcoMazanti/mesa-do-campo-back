@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,14 +33,14 @@ public class ItemPedido {
 
     @NotNull
     @Column(name = "preco", precision = 10, scale = 2, nullable = false)
-    private double preco;
+    private BigDecimal preco;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private StatusPedido status;
 
-    public ItemPedido(int idPedido, int idProduto, int quantidade, double preco, StatusPedido status) {
+    public ItemPedido(int idPedido, int idProduto, int quantidade, BigDecimal preco, StatusPedido status) {
         this.idPedido = idPedido;
         this.idProduto = idProduto;
         this.quantidade = quantidade;
@@ -46,7 +48,7 @@ public class ItemPedido {
         this.status = status;
     }
 
-    public ItemPedido(int idPedido, int idProduto, int quantidade, double preco) {
+    public ItemPedido(int idPedido, int idProduto, int quantidade, BigDecimal preco) {
         this.idPedido = idPedido;
         this.idProduto = idProduto;
         this.quantidade = quantidade;

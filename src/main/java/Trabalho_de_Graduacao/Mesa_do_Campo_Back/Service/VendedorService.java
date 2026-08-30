@@ -21,7 +21,7 @@ public class VendedorService {
     private ClienteRepository clienteRepository;
 
     public VendedorDTO getByIdVendedor(int idVendedor) {
-        Optional<Vendedor> vendedorOptional = vendedorRepository.findByIDVendedor(idVendedor);
+        Optional<Vendedor> vendedorOptional = vendedorRepository.findByIdVendedor(idVendedor);
 
         if (vendedorOptional.isPresent()) {
             Vendedor vendedor = vendedorOptional.get();
@@ -55,7 +55,7 @@ public class VendedorService {
     }
 
     public VendedorDTO createVendedor(Vendedor vendedor) {
-        Optional<Vendedor> vendedorOptional = vendedorRepository.findByIDVendedor(vendedor.getIdVendedor());
+        Optional<Vendedor> vendedorOptional = vendedorRepository.findByIdVendedor(vendedor.getIdVendedor());
 
         if (vendedorOptional.isPresent()) throw new SolicitacaoNegadaException("Já existe um vendedor com esse ID cadastrado.");
 
@@ -71,7 +71,7 @@ public class VendedorService {
 
     public VendedorDTO updateVendedor(VendedorDTO vendedorDTO, int idUsuarioAuth) {
         if (vendedorDTO.idVendedor() == idUsuarioAuth) {
-            Optional<Vendedor> vendedorOptional = vendedorRepository.findByIDVendedor(vendedorDTO.idVendedor());
+            Optional<Vendedor> vendedorOptional = vendedorRepository.findByIdVendedor(vendedorDTO.idVendedor());
 
             if (vendedorOptional.isPresent()) {
                 Vendedor vendedorBanco = vendedorOptional.get();

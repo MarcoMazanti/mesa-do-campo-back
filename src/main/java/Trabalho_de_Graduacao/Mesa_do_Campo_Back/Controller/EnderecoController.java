@@ -17,27 +17,27 @@ public class EnderecoController {
     // Esse idUsuario vai ser incerido internamente quando for analisado a authenticacao do requerinte
 
     @GetMapping("/unique/{id}")
-    public ResponseEntity<Endereco> getEnderecoById(@PathVariable("id") int id, @RequestParam("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Endereco> getEnderecoById(@PathVariable("id") int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(enderecoService.getById(id, idUsuarioAuth));
     }
 
     @GetMapping("/user/{idUsuario}")
-    public ResponseEntity<List<Endereco>> getEnderecoByIdUsuario(@PathVariable("idUsuario") int idUsuario, @RequestParam("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<List<Endereco>> getEnderecoByIdUsuario(@PathVariable("idUsuario") int idUsuario, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(enderecoService.getByUsuario(idUsuario));
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public ResponseEntity<Endereco> createEndereco(@RequestBody Endereco endereco) {
         return ResponseEntity.ok(enderecoService.create(endereco));
     }
 
-    @PutMapping()
-    public ResponseEntity<Endereco> updateEndereco(@RequestBody Endereco endereco, @RequestParam("idUsuarioAuth") int idUsuarioAuth) {
+    @PutMapping("/update")
+    public ResponseEntity<Endereco> updateEndereco(@RequestBody Endereco endereco, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(enderecoService.update(endereco, idUsuarioAuth));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEndereco(@PathVariable("id") int id, @RequestParam("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Void> deleteEndereco(@PathVariable("id") int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         enderecoService.delete(id, idUsuarioAuth);
         return ResponseEntity.ok().build();
     }

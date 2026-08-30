@@ -25,7 +25,7 @@ public class Cliente {
     @Size(min = 11, max = 14, message = "Tamanho Inesperado para o CPF ou o CNPJ.")
     @Pattern(regexp = "^(\\d{11}|\\d{14})$", message = "Espera-se Apenas Números para o CPF ou o CNPJ.")
     @Column(name = "cpf_or_cnpj", nullable = false)
-    private String cpfOrCnpj;
+    private String cpfCnpj;
 
     @NotBlank
     @Size(max = 255, message = "Tamanho Inesperado para o E-mail.")
@@ -46,35 +46,35 @@ public class Cliente {
     @Column(name = "id_endereco_entrega")
     private int idEnderecoEntrega;
 
-    public Cliente(int id, String nome, String cpfOrCnpj, String email, String senha, String telefone) {
+    public Cliente(int id, String nome, String cpfCnpj, String email, String senha, String telefone) {
         this.id = id;
         this.nome = nome;
-        this.cpfOrCnpj = cpfOrCnpj;
+        this.cpfCnpj = cpfCnpj;
         this.email = email;
         this.senha = senha;
         this.telefone = telefone;
     }
 
-    public Cliente(int id, String nome, String cpfOrCnpj, String email, String senha) {
+    public Cliente(int id, String nome, String cpfCnpj, String email, String senha) {
         this.id = id;
         this.nome = nome;
-        this.cpfOrCnpj = cpfOrCnpj;
+        this.cpfCnpj = cpfCnpj;
         this.email = email;
         this.senha = senha;
     }
 
-    public Cliente(int id, String nome, String cpfOrCnpj, String email, String senha, int idEnderecoEntrega) {
+    public Cliente(int id, String nome, String cpfCnpj, String email, String senha, int idEnderecoEntrega) {
         this.id = id;
         this.nome = nome;
-        this.cpfOrCnpj = cpfOrCnpj;
+        this.cpfCnpj = cpfCnpj;
         this.email = email;
         this.senha = senha;
         this.idEnderecoEntrega = idEnderecoEntrega;
     }
 
-    public Cliente(String nome, String cpfOrCnpj, String email, String senha) {
+    public Cliente(String nome, String cpfCnpj, String email, String senha) {
         this.nome = nome;
-        this.cpfOrCnpj = cpfOrCnpj;
+        this.cpfCnpj = cpfCnpj;
         this.email = email;
         this.senha = senha;
     }

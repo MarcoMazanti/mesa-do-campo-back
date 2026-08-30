@@ -4,11 +4,12 @@ import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
-    Boolean existsAnyByCpfOrCnpj(String cpfOrCnpj);
+    Boolean existsByCpfCnpj(String cpfCnpj);
     Boolean existsAnyByEmail(String email);
-    Optional<Cliente> findByCpfOrCnpj(String cpfOrCnpj);
+    List<Cliente> findAllByNome(String nome);
 }

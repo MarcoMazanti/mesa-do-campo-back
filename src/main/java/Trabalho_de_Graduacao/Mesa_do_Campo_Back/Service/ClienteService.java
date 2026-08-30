@@ -2,6 +2,7 @@ package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Cliente;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.ClienteDTO;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.LoginDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.RegistroInexistenteException;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.SolicitacaoNegadaException;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Repository.ClienteRepository;
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static Trabalho_de_Graduacao.Mesa_do_Campo_Back.Security.ManagementHash.encriptarSenha;
+import static Trabalho_de_Graduacao.Mesa_do_Campo_Back.Security.ManagementHash.validarSenha;
 
 @Service
 public class ClienteService {
@@ -39,7 +41,7 @@ public class ClienteService {
     }
 
     public ClienteDTO createCliente(Cliente cliente) {
-        if (clienteRepository.existsAnyByCpfOrCnpj(cliente.getCpfOrCnpj())) {
+        if (clienteRepository.existsByCpfCnpj(cliente.getCpfCnpj())) {
             throw new SolicitacaoNegadaException("Já existe um cliente com esse CPF ou CNPJ cadastrado.");
         }
 
@@ -52,6 +54,20 @@ public class ClienteService {
         return EntityToDTO(clienteRepository.save(cliente));
     }
 
+    public void login(LoginDTO loginDTO) {
+        List<Cliente> clienteList = clienteRepository.findAllByNome(loginDTO.nome());
+
+        for (Cliente cliente : clienteList) {
+            if (cliente.getNome().equals(loginDTO.nome())) {
+                if (validarSenha(loginDTO.senha(), cliente.getSenha())) {
+                    return;
+                }
+            }
+        }
+
+        throw new SolicitacaoNegadaException("Não foi possível efetuar o login.");
+    }
+
     // CPF ou CPNJ, e E-mail são imutáveis
     public ClienteDTO updateCliente(ClienteDTO clienteDTO) {
         Optional<Cliente> clienteOptional = clienteRepository.findById(clienteDTO.id());
@@ -59,7 +75,7 @@ public class ClienteService {
             Cliente clienteBanco = clienteOptional.get();
 
             // Comparação dos campos imutáveis
-            if (clienteBanco.getCpfOrCnpj().equals(clienteDTO.cpfOrCnpj()) && clienteBanco.getEmail().equals(clienteDTO.email())) {
+            if (clienteBanco.getCpfCnpj().equals(clienteDTO.cpfOrCnpj()) && clienteBanco.getEmail().equals(clienteDTO.email())) {
                 clienteBanco.setNome(clienteDTO.nome());
                 clienteBanco.setTelefone(clienteDTO.telefone());
                 clienteBanco.setIdEnderecoEntrega(clienteDTO.idEnderecoEntrega());
@@ -121,7 +137,7 @@ public class ClienteService {
     private ClienteDTO EntityToDTO(Cliente cliente) {
         return new ClienteDTO(cliente.getId(),
                 cliente.getNome(),
-                cliente.getCpfOrCnpj(),
+                cliente.getCpfCnpj(),
                 cliente.getEmail(),
                 cliente.getTelefone(),
                 cliente.getIdEnderecoEntrega());

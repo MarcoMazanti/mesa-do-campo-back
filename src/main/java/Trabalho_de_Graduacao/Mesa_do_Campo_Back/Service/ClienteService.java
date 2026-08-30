@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import static Trabalho_de_Graduacao.Mesa_do_Campo_Back.Security.ManagementHash.encriptarSenha;
 
@@ -46,6 +47,8 @@ public class ClienteService {
             throw new SolicitacaoNegadaException("Já existe um cliente com esse E-mail cadastrado.");
         }
 
+        senhaValida(cliente.getSenha());
+
         return EntityToDTO(clienteRepository.save(cliente));
     }
 
@@ -69,6 +72,8 @@ public class ClienteService {
     }
 
     public ClienteDTO updateSenha(String senha, int idUsuarioAuth) {
+        senhaValida(senha);
+
         Optional<Cliente> clienteOptional = clienteRepository.findById(idUsuarioAuth);
 
         if (clienteOptional.isPresent()) {
@@ -103,6 +108,14 @@ public class ClienteService {
         }
 
         throw new SolicitacaoNegadaException("Apenas é permitido deletar a própria conta.");
+    }
+
+    private void senhaValida(String senha) {
+        if (senha.isBlank()) throw new SolicitacaoNegadaException("Informe a senha para prosseguir.");
+        if (senha.length() < 8) throw new SolicitacaoNegadaException("Insira uma senha maior que 8 caracteres.");
+        if (!Pattern.compile("[A-Z]").matcher(senha).find()) throw new SolicitacaoNegadaException("Insira alguma letra maiúscula na senha.");
+        if (!Pattern.compile("\\d").matcher(senha).find()) throw new SolicitacaoNegadaException("Insira algum número na senha.");
+        if (!Pattern.compile("[^a-zA-Z0-9]").matcher(senha).find()) throw new SolicitacaoNegadaException("Insira algum caractere especial na senha.");
     }
 
     private ClienteDTO EntityToDTO(Cliente cliente) {

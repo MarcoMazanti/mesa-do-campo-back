@@ -1,5 +1,6 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller;
 
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.LoginDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.VendedorDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Vendedor;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.VendedorService;
@@ -16,7 +17,7 @@ public class VendedorController {
     private VendedorService vendedorService;
 
     @GetMapping("/auto")
-    public ResponseEntity<VendedorDTO> getVendedor(@RequestParam("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<VendedorDTO> getVendedor(@RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(vendedorService.getByIdVendedor(idUsuarioAuth));
     }
 
@@ -25,18 +26,18 @@ public class VendedorController {
         return ResponseEntity.ok(vendedorService.getAllVendedores());
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public ResponseEntity<VendedorDTO> createVendedor(@RequestBody Vendedor vendedor) {
         return ResponseEntity.ok(vendedorService.createVendedor(vendedor));
     }
 
-    @PutMapping()
-    public ResponseEntity<VendedorDTO> updateVendedor(@RequestBody VendedorDTO vendedor, @RequestParam("idUsuarioAuth") int idUsuarioAuth) {
+    @PutMapping("/update")
+    public ResponseEntity<VendedorDTO> updateVendedor(@RequestBody VendedorDTO vendedor, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(vendedorService.updateVendedor(vendedor, idUsuarioAuth));
     }
 
     @DeleteMapping("/{idAlvo}")
-    public ResponseEntity<Void> deleteVendedor(@PathVariable("idAlvo") int idAlvo, @RequestParam("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Void> deleteVendedor(@PathVariable("idAlvo") int idAlvo, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         vendedorService.deleteVendedor(idAlvo, idUsuarioAuth);
         return ResponseEntity.ok().build();
     }

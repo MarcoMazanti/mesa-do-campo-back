@@ -21,7 +21,10 @@ public class WebConfig implements WebMvcConfigurer {
                         "/v3/api-docs/**",
                         "/**/all",
                         "/api/cliente/create",
-                        "/api/cliente/login"
+                        "/api/cliente/login",
+                        "/api/produto/unique/**",
+                        "/api/produto/all",
+                        "/api/produto/vendedor/**"
                 );
     }
 }

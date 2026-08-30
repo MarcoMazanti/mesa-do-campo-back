@@ -21,7 +21,7 @@ public class Vendedor {
     @Id
     @NotNull
     @Column(name = "id_vendedor", nullable = false)
-    private int id_vendedor; // PK e FK apontando para a tabela Usuario
+    private int idVendedor; // PK e FK apontando para a tabela Usuario
 
     @Column(name = "avaliacao")
     private float avaliacao;
@@ -37,20 +37,20 @@ public class Vendedor {
     @Column(name = "tipo_pagamento")
     private TipoPagamento tipoPagamento;
 
-    public Vendedor(int id_vendedor) {
-        this.id_vendedor = id_vendedor;
+    public Vendedor(int idVendedor) {
+        this.idVendedor = idVendedor;
         avaliacao = 0;
         dataAdmissao = LocalDate.now();
     }
 
-    public Vendedor(int id_vendedor, float avaliacao) {
-        this.id_vendedor = id_vendedor;
+    public Vendedor(int idVendedor, float avaliacao) {
+        this.idVendedor = idVendedor;
         this.avaliacao = avaliacao;
         this.dataAdmissao = LocalDate.now();
     }
 
-    public Vendedor(int id_vendedor, LocalDate dataAdmissao) {
-        this.id_vendedor = id_vendedor;
+    public Vendedor(int idVendedor, LocalDate dataAdmissao) {
+        this.idVendedor = idVendedor;
         this.dataAdmissao = dataAdmissao;
         avaliacao = 0;
     }

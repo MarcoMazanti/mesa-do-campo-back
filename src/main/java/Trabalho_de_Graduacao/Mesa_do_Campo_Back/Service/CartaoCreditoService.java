@@ -88,8 +88,7 @@ public class CartaoCreditoService {
         for (CartaoCredito cartaoCredito : cartaoCreditoList) {
             if (cartaoCredito.getId() == id) {
                 cartaoCredito.setPadrao(true);
-                cartaoCreditoRepository.save(cartaoCredito);
-                return cartaoCredito;
+                return cartaoCreditoRepository.save(cartaoCredito);
             }
         }
 
@@ -112,5 +111,15 @@ public class CartaoCreditoService {
 
     public void deleteCartaoCredito(int id, int idUsuarioAuth) {
         Optional<CartaoCredito> cartaoCreditoOptional = cartaoCreditoRepository.findById(id);
+
+        if (cartaoCreditoOptional.isPresent()) {
+            CartaoCredito cartaoCreditoBanco = cartaoCreditoOptional.get();
+
+            if (cartaoCreditoBanco.getIdCliente() != idUsuarioAuth) throw new SolicitacaoNegadaException("Não se pode deletar um cartão de terceiro");
+
+            cartaoCreditoRepository.deleteById(id);
+        }
+
+        throw new RegistroInexistenteException("Não foi encontrado um cartão de crédito com o ID: " + id + "para o cliente com o ID: " + idUsuarioAuth + " para deletar.");
     }
 }

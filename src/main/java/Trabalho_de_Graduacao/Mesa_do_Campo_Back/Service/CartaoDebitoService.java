@@ -25,13 +25,13 @@ public class CartaoDebitoService {
             return cartaoDebitoOptional.get();
         }
 
-        throw new RegistroInexistenteException("Não foi eocontrado um cartão de crédito com o ID: " + id);
+        throw new RegistroInexistenteException("Não foi eocontrado um cartão de débito com o ID: " + id);
     }
 
     public List<CartaoDebito> getAllCartaoDebitoByIdCliente(int idUsuarioAuth) {
         List<CartaoDebito> cartaoDebitoList = cartaoDebitoRepository.findAllByClienteId(idUsuarioAuth);
 
-        if (cartaoDebitoList.isEmpty()) throw new RegistroInexistenteException("Não possui nenhum cartão de crédito cadastrado para este usuário.");
+        if (cartaoDebitoList.isEmpty()) throw new RegistroInexistenteException("Não possui nenhum cartão de débito cadastrado para este usuário.");
 
         return cartaoDebitoList;
     }
@@ -39,13 +39,13 @@ public class CartaoDebitoService {
     public CartaoDebito getCartaoDebitoAtivo(int idUsuarioAuth) {
         List<CartaoDebito> cartaoDebitoList = cartaoDebitoRepository.findAllByClienteId(idUsuarioAuth);
 
-        if (cartaoDebitoList.isEmpty()) throw new RegistroInexistenteException("Não possui nenhum cartão de crédito cadastrado para este usuário.");
+        if (cartaoDebitoList.isEmpty()) throw new RegistroInexistenteException("Não possui nenhum cartão de débito cadastrado para este usuário.");
 
         for (CartaoDebito cartaoDebito : cartaoDebitoList) {
             if (cartaoDebito.isPadrao()) return cartaoDebito;
         }
 
-        throw new RegistroInexistenteException("Não possui nenhum cartão de crédito ativo para o cliente com o ID: " + idUsuarioAuth);
+        throw new RegistroInexistenteException("Não possui nenhum cartão de débito ativo para o cliente com o ID: " + idUsuarioAuth);
     }
 
     public CartaoDebito createCartaoDebito(CartaoDebito cartaoDebito, int idUsuarioAuth) {
@@ -92,7 +92,7 @@ public class CartaoDebitoService {
             }
         }
 
-        throw new RegistroInexistenteException("Não foi encontrado um cartão de crédito com o ID: " + id + "para o cliente com o ID: " + idUsuarioAuth + " ativar.");
+        throw new RegistroInexistenteException("Não foi encontrado um cartão de débito com o ID: " + id + "para o cliente com o ID: " + idUsuarioAuth + " ativar.");
     }
 
     public void desativarCartaoDebito(int id, int idUsuarioAuth) {
@@ -106,7 +106,7 @@ public class CartaoDebitoService {
             }
         }
 
-        throw new RegistroInexistenteException("Não foi encontrado um cartão de crédito com o ID: " + id + "para o cliente com o ID: " + idUsuarioAuth + " desativar.");
+        throw new RegistroInexistenteException("Não foi encontrado um cartão de débito com o ID: " + id + "para o cliente com o ID: " + idUsuarioAuth + " desativar.");
     }
 
     public void deleteCartaoDebito(int id, int idUsuarioAuth) {
@@ -120,6 +120,6 @@ public class CartaoDebitoService {
             cartaoDebitoRepository.deleteById(id);
         }
 
-        throw new RegistroInexistenteException("Não foi encontrado um cartão de crédito com o ID: " + id + "para o cliente com o ID: " + idUsuarioAuth + " para deletar.");
+        throw new RegistroInexistenteException("Não foi encontrado um cartão de débito com o ID: " + id + "para o cliente com o ID: " + idUsuarioAuth + " para deletar.");
     }
 }

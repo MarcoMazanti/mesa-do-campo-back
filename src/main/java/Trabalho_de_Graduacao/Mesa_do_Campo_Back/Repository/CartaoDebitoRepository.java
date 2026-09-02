@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface CartaoDebitoRepository extends JpaRepository<CartaoDebito, Integer> {
-    List<CartaoDebito> findAllByClienteId(int idCliente);
+    List<CartaoDebito> findAllByIdCliente(int idCliente);
 }

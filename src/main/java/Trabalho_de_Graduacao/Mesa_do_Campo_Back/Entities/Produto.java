@@ -1,5 +1,6 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities;
 
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Enum.CategoriaProduto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -37,8 +38,20 @@ public class Produto {
     @Column(name = "quantidade", nullable = false)
     private int quantidade;
 
+    @NotNull
+    @Column(name = "categoria", nullable = false)
+    private CategoriaProduto categoria;
+
     @Column(name = "descricao")
     private String descricao;
+
+    public Produto(int idVendedor, String nome, BigDecimal preco, int quantidade, CategoriaProduto categoria) {
+        this.idVendedor = idVendedor;
+        this.nome = nome;
+        this.preco = preco;
+        this.quantidade = quantidade;
+        this.categoria = categoria;
+    }
 
     public Produto(int id, int idVendedor, String nome, BigDecimal preco, int quantidade) {
         this.id = id;
@@ -46,6 +59,7 @@ public class Produto {
         this.nome = nome;
         this.preco = preco;
         this.quantidade = quantidade;
+        categoria = CategoriaProduto.OUTROS;
     }
 
     public Produto(int idVendedor, String nome, BigDecimal preco) {
@@ -53,5 +67,6 @@ public class Produto {
         this.nome = nome;
         this.preco = preco;
         quantidade = 0;
+        categoria = CategoriaProduto.OUTROS;
     }
 }

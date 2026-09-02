@@ -29,7 +29,7 @@ public class ChavePixService {
     }
 
     public List<ChavePix> getAllChavePixByIdCliente(int idUsuarioAuth) {
-        List<ChavePix> chavePixList = chavePixRepository.findAllByClienteId(idUsuarioAuth);
+        List<ChavePix> chavePixList = chavePixRepository.findAllByIdCliente(idUsuarioAuth);
 
         if (chavePixList.isEmpty()) throw new RegistroInexistenteException("Não possui nenhuma chave pix cadastrada para este usuário.");
 
@@ -37,7 +37,7 @@ public class ChavePixService {
     }
 
     public ChavePix getChavePixAtivo(int idUsuarioAuth) {
-        List<ChavePix> chavePixList = chavePixRepository.findAllByClienteId(idUsuarioAuth);
+        List<ChavePix> chavePixList = chavePixRepository.findAllByIdCliente(idUsuarioAuth);
 
         if (chavePixList.isEmpty()) throw new RegistroInexistenteException("Não possui nenhuma chave pix cadastrada para este usuário.");
 

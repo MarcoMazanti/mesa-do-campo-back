@@ -29,7 +29,7 @@ public class CartaoDebitoService {
     }
 
     public List<CartaoDebito> getAllCartaoDebitoByIdCliente(int idUsuarioAuth) {
-        List<CartaoDebito> cartaoDebitoList = cartaoDebitoRepository.findAllByClienteId(idUsuarioAuth);
+        List<CartaoDebito> cartaoDebitoList = cartaoDebitoRepository.findAllByIdCliente(idUsuarioAuth);
 
         if (cartaoDebitoList.isEmpty()) throw new RegistroInexistenteException("Não possui nenhum cartão de débito cadastrado para este usuário.");
 
@@ -37,7 +37,7 @@ public class CartaoDebitoService {
     }
 
     public CartaoDebito getCartaoDebitoAtivo(int idUsuarioAuth) {
-        List<CartaoDebito> cartaoDebitoList = cartaoDebitoRepository.findAllByClienteId(idUsuarioAuth);
+        List<CartaoDebito> cartaoDebitoList = cartaoDebitoRepository.findAllByIdCliente(idUsuarioAuth);
 
         if (cartaoDebitoList.isEmpty()) throw new RegistroInexistenteException("Não possui nenhum cartão de débito cadastrado para este usuário.");
 

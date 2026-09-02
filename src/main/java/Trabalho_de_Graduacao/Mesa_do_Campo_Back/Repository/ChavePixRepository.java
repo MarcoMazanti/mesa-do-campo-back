@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ChavePixRepository extends JpaRepository<ChavePix, Integer> {
-    List<ChavePix> findAllByClienteId(int idCliente);
+    List<ChavePix> findAllByIdCliente(int idCliente);
 }

@@ -1,5 +1,6 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service;
 
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Enum.CategoriaProduto;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Produto;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Vendedor;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.RegistroInexistenteException;
@@ -45,6 +46,14 @@ public class ProdutoService {
         return produtoList;
     }
 
+    public List<Produto> getAllProdutosByCategoria(CategoriaProduto categoria) {
+        List<Produto> produtoList = produtoRepository.findAllByCategoria(categoria.toString());
+
+        if (produtoList.isEmpty()) throw new RegistroInexistenteException("Não possui produtos cadastrados.");
+
+        return produtoList;
+    }
+
     public Produto createProduto(Produto produto, int idUsuarioAuth) {
         Optional<Vendedor> vendedorOptional = vendedorRepository.findByIdVendedor(produto.getIdVendedor());
 
@@ -67,6 +76,7 @@ public class ProdutoService {
             produtoBanco.setPreco(produto.getPreco());
             produtoBanco.setDescricao(produto.getDescricao());
             produtoBanco.setQuantidade(produto.getQuantidade());
+            produtoBanco.setCategoria(produto.getCategoria());
 
             return produtoRepository.save(produtoBanco);
         }

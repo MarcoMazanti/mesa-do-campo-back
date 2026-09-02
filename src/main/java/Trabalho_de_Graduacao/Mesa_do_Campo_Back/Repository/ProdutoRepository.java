@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
     List<Produto> findAllByIdVendedor(int idVendedor);
+    List<Produto> findAllByCategoria(String categoria);
 }

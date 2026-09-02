@@ -26,7 +26,7 @@ public class AvaliacaoService {
     }
 
     public List<Avaliacao> getAllAvaliacoesByIdVendedor(int idVendedor) {
-        List<Avaliacao> avaliacaoList = avaliacaoRepository.findAllByVendedorId(idVendedor);
+        List<Avaliacao> avaliacaoList = avaliacaoRepository.findAllByIdVendedor(idVendedor);
 
         if (avaliacaoList.isEmpty()) throw new RegistroInexistenteException("Não foi encontrado nenhuma avaliação relacionadas ao vendedor de ID: " + idVendedor);
 
@@ -34,7 +34,7 @@ public class AvaliacaoService {
     }
 
     public List<Avaliacao> getAllAvaliacoesByIdCliente(int idCliente) {
-        List<Avaliacao> avaliacaoList = avaliacaoRepository.findAllByClienteId(idCliente);
+        List<Avaliacao> avaliacaoList = avaliacaoRepository.findAllByIdCliente(idCliente);
 
         if (avaliacaoList.isEmpty()) throw new RegistroInexistenteException("Não foi encontrado nenhuma avaliação enviada pelo cliente de ID: " + idCliente);
 

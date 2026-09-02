@@ -54,13 +54,13 @@ public class ClienteService {
         return EntityToDTO(clienteRepository.save(cliente));
     }
 
-    public void login(LoginDTO loginDTO) {
+    public ClienteDTO login(LoginDTO loginDTO) {
         List<Cliente> clienteList = clienteRepository.findAllByNome(loginDTO.nome());
 
         for (Cliente cliente : clienteList) {
             if (cliente.getNome().equals(loginDTO.nome())) {
                 if (validarSenha(loginDTO.senha(), cliente.getSenha())) {
-                    return;
+                    return EntityToDTO(cliente);
                 }
             }
         }

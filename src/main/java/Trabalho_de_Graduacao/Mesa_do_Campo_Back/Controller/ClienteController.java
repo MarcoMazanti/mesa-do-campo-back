@@ -39,9 +39,8 @@ public class ClienteController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody LoginDTO loginDTO) {
-        clienteService.login(loginDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ClienteDTO> login(@RequestBody LoginDTO loginDTO) {
+        return ResponseEntity.ok(clienteService.login(loginDTO));
     }
 
     @PutMapping("/update")

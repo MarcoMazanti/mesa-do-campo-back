@@ -33,22 +33,20 @@ public class MesaDoCampoBackApplication {
 
 	public static void iniciarNgrok(Dotenv dotenv) {
 		try {
-			// 1. Pega o token diretamente do .env
 			String authToken = dotenv.get("NGROK_AUTHTOKEN");
+			String domain = dotenv.get("NGROK_DOMAIN");
 
 			if (authToken == null || authToken.isEmpty()) {
 				System.out.println("Erro: NGROK_AUTHTOKEN não foi encontrado no arquivo .env");
 				return;
 			}
 
-			// 2. Configura o ngrok com o token
 			JavaNgrokConfig config = new JavaNgrokConfig.Builder().withAuthToken(authToken).build();
-
-			// 3. Constrói o cliente passando as configurações
 			NgrokClient ngrokClient = new NgrokClient.Builder().withJavaNgrokConfig(config).build();
 
 			var tunnel = ngrokClient.connect(new CreateTunnel.Builder()
 					.withAddr(Integer.parseInt(dotenv.get("SERVER_PORT")))
+					.withDomain(domain)
 					.build());
 
 			System.out.println("\n✅ API iniciada com sucesso!");

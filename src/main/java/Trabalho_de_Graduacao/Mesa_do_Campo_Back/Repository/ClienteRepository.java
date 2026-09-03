@@ -12,4 +12,5 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     Boolean existsByCpfCnpj(String cpfCnpj);
     Boolean existsAnyByEmail(String email);
     List<Cliente> findAllByNome(String nome);
+    Optional<Cliente> findByEmail(String email);
 }

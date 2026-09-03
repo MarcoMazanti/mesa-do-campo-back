@@ -1,6 +1,5 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller;
 
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.LoginDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.VendedorDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Vendedor;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.VendedorService;

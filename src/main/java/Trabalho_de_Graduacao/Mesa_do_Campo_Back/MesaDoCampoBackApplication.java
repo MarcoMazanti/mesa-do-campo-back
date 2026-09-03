@@ -35,6 +35,16 @@ public class MesaDoCampoBackApplication {
 		try {
 			String authToken = dotenv.get("NGROK_AUTHTOKEN");
 			String domain = dotenv.get("NGROK_DOMAIN");
+			int porta = 8080;
+			String portEnv = dotenv.get("SERVER_PORT");
+
+			if (portEnv != null && !portEnv.trim().isEmpty()) {
+				try {
+					porta = Integer.parseInt(portEnv);
+				} catch (NumberFormatException e) {
+					System.out.println("Porta inválida no .env. Usando a porta padrão 8080.");
+				}
+			}
 
 			if (authToken == null || authToken.isEmpty()) {
 				System.out.println("Erro: NGROK_AUTHTOKEN não foi encontrado no arquivo .env");
@@ -45,7 +55,7 @@ public class MesaDoCampoBackApplication {
 			NgrokClient ngrokClient = new NgrokClient.Builder().withJavaNgrokConfig(config).build();
 
 			var tunnel = ngrokClient.connect(new CreateTunnel.Builder()
-					.withAddr(Integer.parseInt(dotenv.get("SERVER_PORT")))
+					.withAddr(porta)
 					.withDomain(domain)
 					.build());
 

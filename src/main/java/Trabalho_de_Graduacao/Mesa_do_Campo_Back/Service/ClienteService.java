@@ -55,13 +55,12 @@ public class ClienteService {
     }
 
     public ClienteDTO login(LoginDTO loginDTO) {
-        List<Cliente> clienteList = clienteRepository.findAllByNome(loginDTO.nome());
+        Optional<Cliente> clienteOptional = clienteRepository.findByEmail(loginDTO.email());
 
-        for (Cliente cliente : clienteList) {
-            if (cliente.getNome().equals(loginDTO.nome())) {
-                if (validarSenha(loginDTO.senha(), cliente.getSenha())) {
-                    return EntityToDTO(cliente);
-                }
+        if (clienteOptional.isPresent()) {
+            Cliente cliente = clienteOptional.get();
+            if (validarSenha(loginDTO.senha(), cliente.getSenha())) {
+                return EntityToDTO(cliente);
             }
         }
 

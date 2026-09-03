@@ -1,6 +1,6 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities;
 
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Enum.StatusPedido;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Enum.StatusItemPedido;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -38,9 +38,9 @@ public class ItemPedido {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private StatusPedido status;
+    private StatusItemPedido status;
 
-    public ItemPedido(int idPedido, int idProduto, int quantidade, BigDecimal preco, StatusPedido status) {
+    public ItemPedido(int idPedido, int idProduto, int quantidade, BigDecimal preco, StatusItemPedido status) {
         this.idPedido = idPedido;
         this.idProduto = idProduto;
         this.quantidade = quantidade;
@@ -53,6 +53,6 @@ public class ItemPedido {
         this.idProduto = idProduto;
         this.quantidade = quantidade;
         this.preco = preco;
-        status = StatusPedido.PENDENTE;
+        status = StatusItemPedido.PENDENTE;
     }
 }

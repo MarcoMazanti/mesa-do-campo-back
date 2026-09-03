@@ -1,5 +1,6 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities;
 
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Enum.StatusPedido;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -33,9 +34,21 @@ public class Pedido {
     @Column(name = "data_compra", nullable = false)
     private LocalDateTime dataCompra;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private StatusPedido status;
+
     public Pedido(int idUsuario, BigDecimal precoTotal) {
         this.idUsuario = idUsuario;
         this.precoTotal = precoTotal;
         dataCompra = LocalDateTime.now();
+        status = StatusPedido.AGUARDANDO_PAGAMENTO;
+    }
+
+    public Pedido(int idUsuario, BigDecimal precoTotal, StatusPedido status) {
+        this.idUsuario = idUsuario;
+        this.precoTotal = precoTotal;
+        this.status = status;
     }
 }

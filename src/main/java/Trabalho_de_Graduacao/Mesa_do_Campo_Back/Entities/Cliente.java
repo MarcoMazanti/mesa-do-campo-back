@@ -44,7 +44,7 @@ public class Cliente {
     private String telefone;
 
     @Column(name = "id_endereco_entrega")
-    private int idEnderecoEntrega;
+    private Integer idEnderecoEntrega;
 
     public Cliente(int id, String nome, String cpfCnpj, String email, String senha, String telefone) {
         this.id = id;
@@ -53,6 +53,7 @@ public class Cliente {
         this.email = email;
         this.senha = senha;
         this.telefone = telefone;
+        idEnderecoEntrega = null;
     }
 
     public Cliente(int id, String nome, String cpfCnpj, String email, String senha) {
@@ -61,9 +62,10 @@ public class Cliente {
         this.cpfCnpj = cpfCnpj;
         this.email = email;
         this.senha = senha;
+        idEnderecoEntrega = null;
     }
 
-    public Cliente(int id, String nome, String cpfCnpj, String email, String senha, int idEnderecoEntrega) {
+    public Cliente(int id, String nome, String cpfCnpj, String email, String senha, Integer idEnderecoEntrega) {
         this.id = id;
         this.nome = nome;
         this.cpfCnpj = cpfCnpj;
@@ -77,5 +79,6 @@ public class Cliente {
         this.cpfCnpj = cpfCnpj;
         this.email = email;
         this.senha = senha;
+        idEnderecoEntrega = null;
     }
 }

@@ -21,9 +21,9 @@ public class EnderecoController {
         return ResponseEntity.ok(enderecoService.getById(id, idUsuarioAuth));
     }
 
-    @GetMapping("/user/{idUsuario}")
-    public ResponseEntity<List<Endereco>> getEnderecoByIdUsuario(@PathVariable("idUsuario") int idUsuario, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
-        return ResponseEntity.ok(enderecoService.getByUsuario(idUsuario));
+    @GetMapping("/user")
+    public ResponseEntity<List<Endereco>> getEnderecoByIdUsuario(@RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+        return ResponseEntity.ok(enderecoService.getByUsuario(idUsuarioAuth));
     }
 
     @PostMapping("/create")

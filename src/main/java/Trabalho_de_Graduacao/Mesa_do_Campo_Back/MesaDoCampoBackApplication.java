@@ -16,7 +16,7 @@ public class MesaDoCampoBackApplication {
 		SpringApplication app = new SpringApplication(MesaDoCampoBackApplication.class);
 		app.run(args);
 
-		iniciarNgrok(dotenv);
+		//iniciarNgrok(dotenv);
 	}
 
 	private static Dotenv carregarDotenv() {

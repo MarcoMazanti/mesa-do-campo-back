@@ -50,6 +50,7 @@ public class ClienteService {
         }
 
         senhaValida(cliente.getSenha());
+        cliente.setSenha(encriptarSenha(cliente.getSenha()));
 
         return EntityToDTO(clienteRepository.save(cliente));
     }

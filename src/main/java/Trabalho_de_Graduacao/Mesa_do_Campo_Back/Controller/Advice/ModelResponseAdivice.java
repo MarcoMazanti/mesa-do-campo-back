@@ -1,5 +1,6 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller.Advice;
 
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.External.BatchModel;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.External.ErrorResponse;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.External.ReturnModel;
 import org.jspecify.annotations.Nullable;
@@ -15,6 +16,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ModelResponseAdivice implements ResponseBodyAdvice<Object> {
@@ -31,9 +33,15 @@ public class ModelResponseAdivice implements ResponseBodyAdvice<Object> {
                                             MediaType selectedContentType,
                                             Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                             ServerHttpRequest request, ServerHttpResponse response) {
-        if (body == null) return null;
 
+        if (body == null) return null;
         if (body instanceof ReturnModel) return body;
+
+        String limitHeader = request.getHeaders().getFirst("limit");
+        String batchHeader = request.getHeaders().getFirst("batch");
+
+        int limit = (limitHeader != null && !limitHeader.isEmpty()) ? Integer.parseInt(limitHeader) : 10;
+        int batch = (batchHeader != null && !batchHeader.isEmpty()) ? Integer.parseInt(batchHeader) : 1;
 
         ReturnModel returnModel;
 
@@ -42,19 +50,46 @@ public class ModelResponseAdivice implements ResponseBodyAdvice<Object> {
                     errorResponse.status(),
                     request.getURI().getPath(),
                     false,
-                    1,
+                    null,
+                    null,
                     null,
                     errorResponse
             );
         } else {
-            returnModel = new ReturnModel(
-                    200,
-                    request.getURI().getPath(),
-                    true,
-                    (body instanceof List<?> lista) ? lista.size() : 1,
-                    ((body instanceof List<?> lista) ? lista : Collections.singletonList(body)),
-                    null
-            );
+            if (body instanceof List<?> lista) {
+                // Cálculo do total de lotes
+                int totalItems = lista.size();
+                int totalBatches = (int) Math.ceil((double) totalItems / limit);
+
+                // Paginação
+                List<?> listaFiltrada = lista.stream()
+                        .skip((long) (batch - 1) * limit)
+                        .limit(limit)
+                        .collect(Collectors.toList());
+
+                returnModel = new ReturnModel(
+                        200,
+                        request.getURI().getPath(),
+                        true,
+                        totalItems,
+                        new BatchModel(
+                                limit,
+                                batch,
+                                totalBatches),
+                        listaFiltrada,
+                        null
+                );
+            } else {
+                returnModel = new ReturnModel(
+                        200,
+                        request.getURI().getPath(),
+                        true,
+                        1,
+                        new BatchModel(1, 1, 1),
+                        Collections.singletonList(body),
+                        null
+                );
+            }
         }
 
         if (StringHttpMessageConverter.class.isAssignableFrom(selectedConverterType)) {

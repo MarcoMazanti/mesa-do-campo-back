@@ -12,6 +12,7 @@ public record ReturnModel(
         String path,
         boolean success,
         Integer quantity,
+        BatchModel batch,
         List<?> itens,
         ErrorResponse errors) {
     @JsonCreator
@@ -19,12 +20,14 @@ public record ReturnModel(
                        @JsonProperty("path") String path,
                        @JsonProperty("success") boolean success,
                        @JsonProperty("quantity") Integer quantity,
+                       @JsonProperty("batch") BatchModel batch,
                        @JsonProperty("itens") List<?> itens,
                        @JsonProperty("errors") ErrorResponse errors) {
         this.status = status;
         this.path = path;
         this.success = success;
         this.quantity = quantity;
+        this.batch = batch;
         this.itens = itens;
         this.errors = errors;
     }

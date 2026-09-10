@@ -6,6 +6,7 @@ import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.LoginDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.RegistroInexistenteException;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.SolicitacaoNegadaException;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Repository.ClienteRepository;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,9 @@ import static Trabalho_de_Graduacao.Mesa_do_Campo_Back.Security.ManagementHash.v
 public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private EnderecoRepository enderecoRepository;
 
     public ClienteDTO getById(int id) {
         if (clienteRepository.existsById(id)) {
@@ -69,7 +73,10 @@ public class ClienteService {
     }
 
     // CPF ou CPNJ, e E-mail são imutáveis
-    public ClienteDTO updateCliente(ClienteDTO clienteDTO) {
+    public ClienteDTO updateCliente(ClienteDTO clienteDTO, int idUsuarioAuth) {
+        if (clienteDTO.id() != idUsuarioAuth) {
+            throw new SolicitacaoNegadaException("Apenas é permitido alterar os próprios dados.");
+        }
         Optional<Cliente> clienteOptional = clienteRepository.findById(clienteDTO.id());
         if (clienteOptional.isPresent()) {
             Cliente clienteBanco = clienteOptional.get();
@@ -102,6 +109,9 @@ public class ClienteService {
     }
 
     public ClienteDTO updateEndereco(int idEndereco, int idUsuarioAuth) {
+        if (!enderecoRepository.existsByIdAndIdUsuario(idEndereco, idUsuarioAuth)) {
+            throw new SolicitacaoNegadaException("O endereço de entrega precisa pertencer ao cliente autenticado.");
+        }
         Optional<Cliente> clienteOptional = clienteRepository.findById(idUsuarioAuth);
 
         if (clienteOptional.isPresent()) {

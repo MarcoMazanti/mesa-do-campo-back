@@ -27,8 +27,8 @@ public class EnderecoController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Endereco> createEndereco(@RequestBody Endereco endereco) {
-        return ResponseEntity.ok(enderecoService.create(endereco));
+    public ResponseEntity<Endereco> createEndereco(@RequestBody Endereco endereco, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+        return ResponseEntity.ok(enderecoService.create(endereco, idUsuarioAuth));
     }
 
     @PutMapping("/update")

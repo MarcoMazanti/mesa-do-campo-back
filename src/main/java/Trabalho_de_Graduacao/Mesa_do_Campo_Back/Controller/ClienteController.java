@@ -44,8 +44,8 @@ public class ClienteController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ClienteDTO> updateCliente(@RequestBody ClienteDTO clienteDto) {
-        return ResponseEntity.ok(clienteService.updateCliente(clienteDto));
+    public ResponseEntity<ClienteDTO> updateCliente(@RequestBody ClienteDTO clienteDto, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+        return ResponseEntity.ok(clienteService.updateCliente(clienteDto, idUsuarioAuth));
     }
 
     @PatchMapping("/change/senha")

@@ -47,7 +47,7 @@ public class ProdutoService {
     }
 
     public List<Produto> getAllProdutosByCategoria(CategoriaProduto categoria) {
-        List<Produto> produtoList = produtoRepository.findAllByCategoria(categoria.toString());
+        List<Produto> produtoList = produtoRepository.findAllByCategoria(categoria);
 
         if (produtoList.isEmpty()) throw new RegistroInexistenteException("Não possui produtos cadastrados.");
 

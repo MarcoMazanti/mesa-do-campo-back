@@ -22,8 +22,8 @@ public class Pedido {
     private int id;
 
     @NotNull
-    @Column(name = "id_usuario", nullable = false)
-    private int idUsuario;
+    @Column(name = "id_cliente", nullable = false)
+    private int idCliente;
 
     @NotNull
     @Column(name = "preco_total", nullable = false, precision = 10, scale = 2)
@@ -39,15 +39,15 @@ public class Pedido {
     @Column(name = "status", nullable = false)
     private StatusPedido status;
 
-    public Pedido(int idUsuario, BigDecimal precoTotal) {
-        this.idUsuario = idUsuario;
+    public Pedido(int idCliente, BigDecimal precoTotal) {
+        this.idCliente = idCliente;
         this.precoTotal = precoTotal;
         dataCompra = LocalDateTime.now();
         status = StatusPedido.AGUARDANDO_PAGAMENTO;
     }
 
-    public Pedido(int idUsuario, BigDecimal precoTotal, StatusPedido status) {
-        this.idUsuario = idUsuario;
+    public Pedido(int idCliente, BigDecimal precoTotal, StatusPedido status) {
+        this.idCliente = idCliente;
         this.precoTotal = precoTotal;
         this.status = status;
     }

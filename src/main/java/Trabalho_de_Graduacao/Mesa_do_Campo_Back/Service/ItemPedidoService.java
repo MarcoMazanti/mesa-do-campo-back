@@ -40,7 +40,7 @@ public class ItemPedidoService {
         Pedido pedido = pedidoRepository.findById(idPedido)
                 .orElseThrow(() -> new RegistroInexistenteException("Pedido não encontrado."));
 
-        if (pedido.getIdUsuario() != idUsuarioAuth) {
+        if (pedido.getIdCliente() != idUsuarioAuth) {
             throw new SolicitacaoNegadaException("Este pedido não pertence ao usuário.");
         }
 
@@ -73,7 +73,7 @@ public class ItemPedidoService {
         Pedido pedido = pedidoRepository.findById(item.getIdPedido())
                 .orElseThrow(() -> new RegistroInexistenteException("Pedido não encontrado."));
 
-        if (pedido.getIdUsuario() != idUsuarioAuth) {
+        if (pedido.getIdCliente() != idUsuarioAuth) {
             throw new SolicitacaoNegadaException("Este pedido não pertence ao usuário.");
         }
 
@@ -89,7 +89,7 @@ public class ItemPedidoService {
         }
 
         item.setId(0);
-        item.setPreco(produto.getPreco());
+        item.setPrecoUnit(produto.getPreco());
         item.setStatus(StatusItemPedido.PENDENTE);
 
         produto.setQuantidade(produto.getQuantidade() - item.getQuantidade());
@@ -112,7 +112,7 @@ public class ItemPedidoService {
         Pedido pedido = pedidoRepository.findById(item.getIdPedido())
                 .orElseThrow(() -> new RegistroInexistenteException("Pedido não encontrado."));
 
-        if (pedido.getIdUsuario() != idUsuarioAuth) {
+        if (pedido.getIdCliente() != idUsuarioAuth) {
             throw new SolicitacaoNegadaException("Este pedido não pertence ao usuário.");
         }
 
@@ -168,7 +168,7 @@ public class ItemPedidoService {
         Pedido pedido = pedidoRepository.findById(item.getIdPedido())
                 .orElseThrow(() -> new RegistroInexistenteException("Pedido não encontrado."));
 
-        if (pedido.getIdUsuario() != idUsuarioAuth) {
+        if (pedido.getIdCliente() != idUsuarioAuth) {
             throw new SolicitacaoNegadaException("Este pedido não pertence ao usuário.");
         }
 
@@ -194,7 +194,7 @@ public class ItemPedidoService {
 
         BigDecimal total = itens.stream()
                 .filter(i -> i.getStatus() != StatusItemPedido.CANCELADO)
-                .map(i -> i.getPreco().multiply(BigDecimal.valueOf(i.getQuantidade())))
+                .map(i -> i.getPrecoUnit().multiply(BigDecimal.valueOf(i.getQuantidade())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         pedido.setPrecoTotal(total);
@@ -205,7 +205,7 @@ public class ItemPedidoService {
         Pedido pedido = pedidoRepository.findById(item.getIdPedido())
                 .orElseThrow(() -> new RegistroInexistenteException("Pedido não encontrado."));
 
-        if (pedido.getIdUsuario() == idUsuarioAuth) return;
+        if (pedido.getIdCliente() == idUsuarioAuth) return;
 
         Produto produto = produtoRepository.findById(item.getIdProduto())
                 .orElseThrow(() -> new RegistroInexistenteException("Produto não encontrado."));

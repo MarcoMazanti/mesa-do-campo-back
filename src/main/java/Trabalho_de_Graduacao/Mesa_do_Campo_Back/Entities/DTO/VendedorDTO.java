@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 public record VendedorDTO(int idVendedor, String nome, String email, String telefone, float avaliacao, LocalDate dataAdmissao) {
     @JsonCreator
-    public VendedorDTO(@JsonProperty("id_vendedor") int idVendedor,
+    public VendedorDTO(@JsonProperty("idVendedor") int idVendedor,
                        @JsonProperty("nome") String nome,
                        @JsonProperty("email") String email,
                        @JsonProperty("telefone") String telefone,

@@ -31,7 +31,7 @@ public class Interceptador implements HandlerInterceptor {
                 return false;
             }
 
-            if (!authHeader.split(" ")[1].contains("Basic")) {
+            if (!authHeader.split(" ")[0].contains("Basic")) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setCharacterEncoding("UTF-8");
                 response.getWriter().write("Modelo de autenticação incorreta, utilize Basic Auth.");
@@ -47,7 +47,6 @@ public class Interceptador implements HandlerInterceptor {
 
             String nome = autenticacao.split(":")[0];
             String senha = autenticacao.split(":")[1];
-            System.out.println(nome);
 
             List<Cliente> clienteList = clienteRepository.findAllByNome(nome);
 

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -32,27 +33,32 @@ public class ItemPedido {
     private int quantidade;
 
     @NotNull
-    @Column(name = "preco", precision = 10, scale = 2, nullable = false)
-    private BigDecimal preco;
+    @Column(name = "preco_unit", precision = 10, scale = 2, nullable = false)
+    private BigDecimal precoUnit;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private StatusItemPedido status;
 
-    public ItemPedido(int idPedido, int idProduto, int quantidade, BigDecimal preco, StatusItemPedido status) {
+    @Column(name = "data_compra")
+    private LocalDateTime dataCompra;
+
+    public ItemPedido(int idPedido, int idProduto, int quantidade, BigDecimal precoUnit, StatusItemPedido status, LocalDateTime dataCompra) {
         this.idPedido = idPedido;
         this.idProduto = idProduto;
         this.quantidade = quantidade;
-        this.preco = preco;
+        this.precoUnit = precoUnit;
         this.status = status;
+        this.dataCompra = dataCompra;
     }
 
-    public ItemPedido(int idPedido, int idProduto, int quantidade, BigDecimal preco) {
+    public ItemPedido(int idPedido, int idProduto, int quantidade, BigDecimal precoUnit, LocalDateTime dataCompra) {
         this.idPedido = idPedido;
         this.idProduto = idProduto;
         this.quantidade = quantidade;
-        this.preco = preco;
-        status = StatusItemPedido.PENDENTE;
+        this.precoUnit = precoUnit;
+        this.status = StatusItemPedido.PENDENTE;
+        this.dataCompra = dataCompra;
     }
 }

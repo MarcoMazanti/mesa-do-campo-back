@@ -31,6 +31,7 @@ public class VendedorService {
             if (clienteOptional.isPresent()) {
                 Cliente cliente = clienteOptional.get();
 
+                System.out.println(EntityToDTO(vendedor, cliente));
                 return EntityToDTO(vendedor, cliente);
             }
 

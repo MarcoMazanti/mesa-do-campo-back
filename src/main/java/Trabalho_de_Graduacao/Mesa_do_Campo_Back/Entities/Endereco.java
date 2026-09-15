@@ -50,12 +50,6 @@ public class Endereco {
     @Column(name = "complement")
     private String complement;
 
-    /*
-     * Estado, cidade, rua, numero virão do front-end quando o usuário inserir o CEP, pois efetuará uma requisição GET
-     * para o endpoint público abaixo:
-     * brasilapi.com.br/api/cep/v1/{cep}
-     */
-
     public Endereco(int id, int idUsuario, String cep, String country, String state, String city, String adress, int number) {
         this.id = id;
         this.idUsuario = idUsuario;
@@ -70,5 +64,9 @@ public class Endereco {
     public Endereco(int idUsuario, String cep) {
         this.idUsuario = idUsuario;
         this.cep = cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep.replaceAll("\\D", "");
     }
 }

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "Pagamento")
+@SecurityRequirement(name = "basicAuth")
 @RestController
 @RequestMapping("/api/pagamentos")
 public class PagamentoController {
@@ -66,7 +67,7 @@ public class PagamentoController {
                                     """)))
     })
     @GetMapping("/id/{id}")
-    public ResponseEntity<Pagamento> findById(@PathVariable int id,
+    public ResponseEntity<Pagamento> findById(@Parameter(description = "ID do pagamento.", example = "5") @PathVariable int id,
                                               @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(pagamentoService.findById(id, idUsuarioAuth));
     }
@@ -164,8 +165,8 @@ public class PagamentoController {
                                     """)))
     })
     @PostMapping("/create/{idPedido}")
-    public ResponseEntity<Pagamento> create(@PathVariable int idPedido,
-                                            @RequestParam("metodo_pagamento") TipoPagamento metodoPagamento,
+    public ResponseEntity<Pagamento> create(@Parameter(description = "ID do pedido a pagar.", example = "5") @PathVariable int idPedido,
+                                            @Parameter(description = "Forma de pagamento.", example = "PIX") @RequestParam("metodo_pagamento") TipoPagamento metodoPagamento,
                                             @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(pagamentoService.criarPagamento(idPedido, metodoPagamento, idUsuarioAuth));
     }
@@ -210,8 +211,8 @@ public class PagamentoController {
                                     """)))
     })
     @PatchMapping("/status/{id}")
-    public ResponseEntity<Pagamento> updateStatus(@PathVariable int id,
-                                                  @RequestParam("status") StatusPagamento novoStatus,
+    public ResponseEntity<Pagamento> updateStatus(@Parameter(description = "ID do pagamento.", example = "5") @PathVariable int id,
+                                                  @Parameter(description = "Novo status.", example = "APROVADO") @RequestParam("status") StatusPagamento novoStatus,
                                                   @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(pagamentoService.atualizarStatus(id, novoStatus, idUsuarioAuth));
     }

@@ -7,6 +7,7 @@ import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.External.ReturnModel;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.RequisicaoIncompletaException;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -82,7 +83,7 @@ public class ClienteController {
                                     """)))
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteDTO> getClienteById(@PathVariable("id") int id) {
+    public ResponseEntity<ClienteDTO> getClienteById(@Parameter(description = "ID do cliente.", example = "2") @PathVariable("id") int id) {
         return ResponseEntity.ok(clienteService.getById(id));
     }
 
@@ -318,7 +319,7 @@ public class ClienteController {
                                     """)))
     })
     @PatchMapping("/change/endereco/{idEndereco}")
-    public ResponseEntity<ClienteDTO> updateEndereco(@PathVariable("idEndereco") int idEndereco, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<ClienteDTO> updateEndereco(@Parameter(description = "ID do endereço a vincular.", example = "3") @PathVariable("idEndereco") int idEndereco, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(clienteService.updateEndereco(idEndereco, idUsuarioAuth));
     }
 
@@ -340,7 +341,7 @@ public class ClienteController {
                                     """)))
     })
     @DeleteMapping("/{idAlvo}")
-    public ResponseEntity<Void> deleteCliente(@PathVariable("idAlvo") int idAlvo, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Void> deleteCliente(@Parameter(description = "ID da própria conta a excluir.", example = "1") @PathVariable("idAlvo") int idAlvo, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         clienteService.delete(idAlvo, idUsuarioAuth);
         return ResponseEntity.ok().build();
     }

@@ -4,11 +4,13 @@ import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Endereco;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.External.ReturnModel;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.EnderecoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "Endereço")
+@SecurityRequirement(name = "basicAuth")
 @RestController
 @RequestMapping("/api/endereco")
 public class EnderecoController {
@@ -51,7 +54,7 @@ public class EnderecoController {
                                     """)))
     })
     @GetMapping("/unique/{id}")
-    public ResponseEntity<Endereco> getEnderecoById(@PathVariable("id") int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Endereco> getEnderecoById(@Parameter(description = "ID do endereço.", example = "3") @PathVariable("id") int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(enderecoService.getById(id, idUsuarioAuth));
     }
 
@@ -149,7 +152,7 @@ public class EnderecoController {
                                     """)))
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEndereco(@PathVariable("id") int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Void> deleteEndereco(@Parameter(description = "ID do endereço a excluir.", example = "3") @PathVariable("id") int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         enderecoService.delete(id, idUsuarioAuth);
         return ResponseEntity.ok().build();
     }

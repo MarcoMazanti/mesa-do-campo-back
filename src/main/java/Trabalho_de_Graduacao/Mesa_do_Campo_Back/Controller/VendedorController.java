@@ -190,7 +190,7 @@ public class VendedorController {
                                     """)))
     })
     @DeleteMapping("/{idAlvo}")
-    public ResponseEntity<Void> deleteVendedor(@PathVariable("idAlvo") int idAlvo, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Void> deleteVendedor(@Parameter(description = "ID da própria conta de vendedor a excluir.", example = "1") @PathVariable("idAlvo") int idAlvo, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         vendedorService.deleteVendedor(idAlvo, idUsuarioAuth);
         return ResponseEntity.ok().build();
     }

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "Pedido")
+@SecurityRequirement(name = "basicAuth")
 @RestController
 @RequestMapping("/api/pedidos")
 public class PedidoController {
@@ -100,11 +101,10 @@ public class PedidoController {
                                     """)))
     })
     @GetMapping("/{id}")
-    public ResponseEntity<Pedido> getById(@PathVariable int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Pedido> getById(@Parameter(description = "ID do pedido.", example = "5") @PathVariable int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(pedidoService.getById(id, idUsuarioAuth));
     }
 
-    // Cabeçalho do pedido + seus itens + o pagamento, tudo em uma só resposta.
     @Operation(summary = "Detalhe completo de um pedido",
             description = "Cabeçalho do pedido + todos os itens + o pagamento, em uma resposta só. \"pagamento\" pode vir nulo se o pedido ainda não tiver nenhum pagamento registrado.")
     @ApiResponses(value = {
@@ -151,7 +151,7 @@ public class PedidoController {
                                     """)))
     })
     @GetMapping("/detalhe/{id}")
-    public ResponseEntity<PedidoDetalhadoDTO> getDetalhe(@PathVariable int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<PedidoDetalhadoDTO> getDetalhe(@Parameter(description = "ID do pedido.", example = "5") @PathVariable int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(pedidoService.getDetalhe(id, idUsuarioAuth));
     }
 
@@ -195,11 +195,10 @@ public class PedidoController {
                                     """)))
     })
     @GetMapping("/entregue/{id}")
-    public ResponseEntity<Pedido> setPedidoEntregue(@PathVariable int id) {
+    public ResponseEntity<Pedido> setPedidoEntregue(@Parameter(description = "ID do pedido.", example = "5") @PathVariable int id) {
         return ResponseEntity.ok(pedidoService.setPedidoEntregue(id));
     }
 
-    // Corpo esperado: { "status": "ENVIADO" } — ENTREGUE/CANCELADO usam seus próprios endpoints.
     @Operation(summary = "Atualiza o status do pedido",
             description = "novoStatus é enviado como QUERY PARAM (não no corpo). Só aceita AGUARDANDO_PAGAMENTO, PROCESSANDO ou ENVIADO — para ENTREGUE use /entregue/{id}, e para CANCELADO use /cancel/{id}.")
     @ApiResponses(value = {
@@ -260,11 +259,12 @@ public class PedidoController {
                                     """)))
     })
     @PatchMapping("/status/{id}")
-    public ResponseEntity<Pedido> updateStatus(@PathVariable int id, @RequestParam StatusPedido novoStatus, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Pedido> updateStatus(@Parameter(description = "ID do pedido.", example = "5") @PathVariable int id,
+                                               @Parameter(description = "Novo status desejado.", example = "ENVIADO") @RequestParam StatusPedido novoStatus,
+                                               @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(pedidoService.atualizarStatus(id, novoStatus, idUsuarioAuth));
     }
 
-    // Criação apenas do "cabeçalho" do pedido — mantido por compatibilidade. Prefira /checkout.
     @Operation(summary = "Cria apenas o \"cabeçalho\" de um pedido",
             description = "Mantido por compatibilidade — não cria itens nem pagamento. idCliente do corpo precisa ser igual ao usuário autenticado. Prefira POST /checkout para uma compra completa.")
     @ApiResponses(value = {
@@ -298,12 +298,6 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoService.createPedido(pedido, idUsuarioAuth));
     }
 
-    /*
-     * Finaliza a compra de uma vez só: recebe os itens do carrinho e a forma
-     * de pagamento, e cria Pedido + ItemPedido (de cada item) + Pagamento de
-     * forma atômica, validando estoque e calculando o total a partir do
-     * preço atual de cada produto.
-     */
     @Operation(summary = "Finaliza a compra (checkout completo)",
             description = "Endpoint recomendado para comprar: recebe os itens do carrinho e a forma de pagamento, e cria de forma ATÔMICA o Pedido, um ItemPedido para cada item (validando e descontando estoque) e o Pagamento (simulado, já criado como APROVADO). O preço usado é sempre o preço ATUAL do produto no banco — nunca um valor enviado pelo front.")
     @ApiResponses(value = {
@@ -393,7 +387,7 @@ public class PedidoController {
                                     """)))
     })
     @DeleteMapping("/cancel/{id}")
-    public ResponseEntity<Void> deletePedido(@PathVariable int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Void> deletePedido(@Parameter(description = "ID do pedido a cancelar.", example = "5") @PathVariable int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         pedidoService.cancelarPedido(id, idUsuarioAuth);
         return ResponseEntity.ok().build();
     }

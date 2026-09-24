@@ -54,7 +54,7 @@ public class ProdutoController {
                                     """)))
     })
     @GetMapping("/unique/{id}")
-    public ResponseEntity<Produto> getProdutoById(@PathVariable("id") int id) {
+    public ResponseEntity<Produto> getProdutoById(@Parameter(description = "ID do produto.", example = "10") @PathVariable("id") int id) {
         return ResponseEntity.ok(produtoService.getById(id));
     }
 
@@ -87,7 +87,7 @@ public class ProdutoController {
                                     """)))
     })
     @GetMapping("/vendedor/{idVendedor}")
-    public ResponseEntity<List<Produto>> getProdutoByVendedor(@PathVariable("idVendedor") int idVendedor) {
+    public ResponseEntity<List<Produto>> getProdutoByVendedor(@Parameter(description = "ID do vendedor.", example = "1") @PathVariable("idVendedor") int idVendedor) {
         return ResponseEntity.ok(produtoService.getAllProdutosByIdVendedor(idVendedor));
     }
 
@@ -159,7 +159,7 @@ public class ProdutoController {
                                     """)))
     })
     @GetMapping("/categoria/{categoria}")
-    public ResponseEntity<List<Produto>> getProdutoByCategoria(@PathVariable("categoria") String categoria) {
+    public ResponseEntity<List<Produto>> getProdutoByCategoria(@Parameter(description = "Nome da categoria (case-insensitive).", example = "verduras") @PathVariable("categoria") String categoria) {
         return ResponseEntity.ok(produtoService.getAllProdutosByCategoria(CategoriaProduto.valueOf(categoria.toUpperCase())));
     }
 
@@ -281,9 +281,8 @@ public class ProdutoController {
                                     """)))
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduto(@PathVariable("id") int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Void> deleteProduto(@Parameter(description = "ID do produto a excluir.", example = "10") @PathVariable("id") int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         produtoService.deleteProduto(id, idUsuarioAuth);
         return ResponseEntity.ok().build();
     }
-
 }

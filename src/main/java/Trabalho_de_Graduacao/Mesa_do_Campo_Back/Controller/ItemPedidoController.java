@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Tag(name = "Item do Pedido")
+@SecurityRequirement(name = "basicAuth")
 @RestController
 @RequestMapping("/api/item-pedido")
 public class ItemPedidoController {
@@ -66,7 +67,7 @@ public class ItemPedidoController {
                                     """)))
     })
     @GetMapping("/unique/{id}")
-    public ResponseEntity<ItemPedido> getById(@PathVariable("id") int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<ItemPedido> getById(@Parameter(description = "ID do item.", example = "12") @PathVariable("id") int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(itemPedidoService.getById(id, idUsuarioAuth));
     }
 
@@ -120,7 +121,7 @@ public class ItemPedidoController {
                             }))
     })
     @GetMapping("/pedido/{idPedido}")
-    public ResponseEntity<List<ItemPedido>> getAllByPedido(@PathVariable("idPedido") int idPedido, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<List<ItemPedido>> getAllByPedido(@Parameter(description = "ID do pedido.", example = "5") @PathVariable("idPedido") int idPedido, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(itemPedidoService.getAllByPedido(idPedido, idUsuarioAuth));
     }
 
@@ -165,7 +166,7 @@ public class ItemPedidoController {
                                     """)))
     })
     @GetMapping("/vendedor/{idVendedor}")
-    public ResponseEntity<List<ItemPedido>> getAllByVendedor(@PathVariable("idVendedor") int idVendedor, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<List<ItemPedido>> getAllByVendedor(@Parameter(description = "ID do vendedor (precisa ser o autenticado).", example = "1") @PathVariable("idVendedor") int idVendedor, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(itemPedidoService.getAllByVendedor(idVendedor, idUsuarioAuth));
     }
 
@@ -284,7 +285,7 @@ public class ItemPedidoController {
                                     """)))
     })
     @PatchMapping("/quantidade/{id}")
-    public ResponseEntity<ItemPedido> updateQuantidade(@PathVariable("id") int id, @RequestBody Map<String, Integer> body, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<ItemPedido> updateQuantidade(@Parameter(description = "ID do item.", example = "12") @PathVariable("id") int id, @RequestBody Map<String, Integer> body, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         return ResponseEntity.ok(itemPedidoService.updateQuantidade(id, body.get("quantidade"), idUsuarioAuth));
     }
 
@@ -339,7 +340,7 @@ public class ItemPedidoController {
                                     """)))
     })
     @PatchMapping("/status/{id}")
-    public ResponseEntity<ItemPedido> updateStatus(@PathVariable("id") int id, @RequestBody Map<String, String> body, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<ItemPedido> updateStatus(@Parameter(description = "ID do item.", example = "12") @PathVariable("id") int id, @RequestBody Map<String, String> body, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         StatusItemPedido novoStatus = StatusItemPedido.valueOf(body.get("status").toUpperCase());
         return ResponseEntity.ok(itemPedidoService.atualizarStatus(id, novoStatus, idUsuarioAuth));
     }
@@ -372,7 +373,7 @@ public class ItemPedidoController {
                                     """)))
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteItem(@PathVariable("id") int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Void> deleteItem(@Parameter(description = "ID do item a remover.", example = "12") @PathVariable("id") int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         itemPedidoService.deleteItem(id, idUsuarioAuth);
         return ResponseEntity.ok().build();
     }

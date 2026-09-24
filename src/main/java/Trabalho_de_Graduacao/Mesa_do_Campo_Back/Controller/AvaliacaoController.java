@@ -53,7 +53,7 @@ public class AvaliacaoController {
                                     """)))
     })
     @GetMapping("/unique/{id}")
-    public ResponseEntity<Avaliacao> getAvaliacaoById(@PathVariable("id") int id) {
+    public ResponseEntity<Avaliacao> getAvaliacaoById(@Parameter(description = "ID da avaliação.", example = "7") @PathVariable("id") int id) {
         return ResponseEntity.ok(avaliacaoService.getById(id));
     }
 
@@ -85,7 +85,7 @@ public class AvaliacaoController {
                                     """)))
     })
     @GetMapping("/vendedor/{idVendedor}")
-    public ResponseEntity<List<Avaliacao>> getAvaliacaoByIdVendedor(@PathVariable("idVendedor") int idVendedor) {
+    public ResponseEntity<List<Avaliacao>> getAvaliacaoByIdVendedor(@Parameter(description = "ID do vendedor.", example = "1") @PathVariable("idVendedor") int idVendedor) {
         return ResponseEntity.ok(avaliacaoService.getAllAvaliacoesByIdVendedor(idVendedor));
     }
 
@@ -117,7 +117,7 @@ public class AvaliacaoController {
                                     """)))
     })
     @GetMapping("/cliente/{idCliente}")
-    public ResponseEntity<List<Avaliacao>> getAvaliacaoByCliente(@PathVariable("idCliente") int idCliente) {
+    public ResponseEntity<List<Avaliacao>> getAvaliacaoByCliente(@Parameter(description = "ID do cliente.", example = "2") @PathVariable("idCliente") int idCliente) {
         return ResponseEntity.ok(avaliacaoService.getAllAvaliacoesByIdCliente(idCliente));
     }
 
@@ -305,7 +305,7 @@ public class AvaliacaoController {
                                     """)))
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAvaliacao(@PathVariable("id") int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Void> deleteAvaliacao(@Parameter(description = "ID da avaliação a excluir.", example = "7") @PathVariable("id") int id, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         avaliacaoService.deleteAvaliacao(id, idUsuarioAuth);
         return ResponseEntity.ok().build();
     }

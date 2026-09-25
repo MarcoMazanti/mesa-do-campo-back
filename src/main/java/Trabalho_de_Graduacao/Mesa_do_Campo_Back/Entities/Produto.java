@@ -54,6 +54,11 @@ public class Produto {
     @Column(name = "descricao")
     private String descricao;
 
+    @Schema(description = "Indica se o produto está visível no catálogo. Utilizado para soft delete (exclusão lógica).", example = "true")
+    @NotNull
+    @Column(name = "ativo", nullable = false)
+    private boolean ativo = true;
+
     public Produto(int idVendedor, String nome, BigDecimal preco, int quantidade, CategoriaProduto categoria) {
         this.idVendedor = idVendedor;
         this.nome = nome;

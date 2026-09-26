@@ -156,6 +156,13 @@ public class ItemPedidoService {
             throw new SolicitacaoNegadaException("Não é possível alterar um item que já está " + item.getStatus() + ".");
         }
 
+        if (novoStatus != StatusItemPedido.PENDENTE
+                && novoStatus != StatusItemPedido.PREPARANDO
+                && novoStatus != StatusItemPedido.EM_TRANSITO) {
+            throw new SolicitacaoNegadaException(
+                    "O vendedor só pode definir o status como PENDENTE, PREPARANDO ou EM_TRANSITO.");
+        }
+
         item.setStatus(novoStatus);
         return itemPedidoRepository.save(item);
     }

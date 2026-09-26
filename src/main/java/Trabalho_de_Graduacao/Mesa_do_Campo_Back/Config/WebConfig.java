@@ -15,10 +15,20 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(interceptador)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
+                        // --- ROTAS DO SWAGGER ---
                         "/swagger",
+                        "/swagger/**",
+                        "/swagger-ui.html",
                         "/swagger-ui/**",
+                        "/api-docs",
                         "/api-docs/**",
+                        "/v3/api-docs",
                         "/v3/api-docs/**",
+                        "/swagger-resources/**",
+                        "/webjars/**",
+
+                        // --- ROTAS PÚBLICAS DA API ---
+                        "/api/crypto/public-key",
                         "/api/cliente/all",
                         "/api/produto/all",
                         "/api/vendedor/all",

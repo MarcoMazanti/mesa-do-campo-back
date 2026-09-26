@@ -1,8 +1,9 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.ChavePix;
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.External.ReturnModel;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.ReturnModel;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.ChavePixService;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.HybridEncrypted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,6 +22,7 @@ import java.util.List;
 @Tag(name = "Chave PIX")
 @SecurityRequirement(name = "basicAuth")
 @RestController
+@HybridEncrypted
 @RequestMapping("/api/chave-pix")
 public class ChavePixController {
     @Autowired

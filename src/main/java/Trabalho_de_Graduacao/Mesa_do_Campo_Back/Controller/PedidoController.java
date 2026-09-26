@@ -3,9 +3,10 @@ package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.CheckoutRequestDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.PedidoDetalhadoDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Enum.StatusPedido;
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.External.ReturnModel;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.ReturnModel;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Pedido;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.PedidoService;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.HybridEncrypted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,6 +25,7 @@ import java.util.List;
 @Tag(name = "Pedido")
 @SecurityRequirement(name = "basicAuth")
 @RestController
+@HybridEncrypted
 @RequestMapping("/api/pedidos")
 public class PedidoController {
     @Autowired

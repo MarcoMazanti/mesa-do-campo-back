@@ -37,6 +37,10 @@ public class ModelResponseAdivice implements ResponseBodyAdvice<Object> {
         if (body == null) return null;
         if (body instanceof ReturnModel) return body;
 
+        // A especificação OpenAPI precisa manter o formato original para o Swagger UI.
+        String path = request.getURI().getPath();
+        if (path.startsWith("/api-docs") || path.startsWith("/v3/api-docs")) return body;
+
         String limitHeader = request.getHeaders().getFirst("limit");
         String batchHeader = request.getHeaders().getFirst("batch");
 

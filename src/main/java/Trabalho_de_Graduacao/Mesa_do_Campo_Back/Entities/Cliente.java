@@ -46,6 +46,9 @@ public class Cliente {
     @Column(name = "id_endereco_entrega")
     private int idEnderecoEntrega;
 
+    @Column(name = "ativo", nullable = false, columnDefinition = "boolean default true")
+    private boolean ativo = true;
+
     public Cliente(int id, String nome, String cpfOrCnpj, String email, String senha, String telefone) {
         this.id = id;
         this.nome = nome;
@@ -53,6 +56,7 @@ public class Cliente {
         this.email = email;
         this.senha = senha;
         this.telefone = telefone;
+        ativo = true;
     }
 
     public Cliente(int id, String nome, String cpfOrCnpj, String email, String senha) {
@@ -61,6 +65,7 @@ public class Cliente {
         this.cpfOrCnpj = cpfOrCnpj;
         this.email = email;
         this.senha = senha;
+        ativo = true;
     }
 
     public Cliente(int id, String nome, String cpfOrCnpj, String email, String senha, int idEnderecoEntrega) {
@@ -70,6 +75,7 @@ public class Cliente {
         this.email = email;
         this.senha = senha;
         this.idEnderecoEntrega = idEnderecoEntrega;
+        ativo = true;
     }
 
     public Cliente(String nome, String cpfOrCnpj, String email, String senha) {
@@ -77,5 +83,6 @@ public class Cliente {
         this.cpfOrCnpj = cpfOrCnpj;
         this.email = email;
         this.senha = senha;
+        ativo = true;
     }
 }

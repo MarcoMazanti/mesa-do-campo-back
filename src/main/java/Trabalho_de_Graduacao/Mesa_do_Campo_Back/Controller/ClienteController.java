@@ -1,6 +1,7 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Cliente;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.CadastroClienteDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.ClienteDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.RequisicaoIncompletaException;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.ClienteService;
@@ -32,12 +33,12 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.getAllClientes());
     }
 
-    @PostMapping()
-    public ResponseEntity<ClienteDTO> createCliente(@RequestBody Cliente cliente) {
+    @PostMapping({"", "/create"})
+    public ResponseEntity<CadastroClienteDTO> createCliente(@RequestBody Cliente cliente) {
         return ResponseEntity.ok(clienteService.createCliente(cliente));
     }
 
-    @PutMapping()
+    @PutMapping({"", "/update"})
     public ResponseEntity<ClienteDTO> updateCliente(@RequestBody ClienteDTO clienteDto) {
         return ResponseEntity.ok(clienteService.updateCliente(clienteDto));
     }
@@ -56,8 +57,8 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{idAlvo}")
-    public ResponseEntity<Void> deleteCliente(@PathVariable("idAlvo") int idAlvo, @RequestParam("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Map<String, String>> deleteCliente(@PathVariable("idAlvo") int idAlvo, @RequestParam("idUsuarioAuth") int idUsuarioAuth) {
         clienteService.delete(idAlvo, idUsuarioAuth);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Map.of("mensagem", "Conta desativada com sucesso."));
     }
 }

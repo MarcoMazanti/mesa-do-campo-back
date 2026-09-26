@@ -26,6 +26,9 @@ public class ClienteService {
     private ClienteRepository clienteRepository;
 
     @Autowired
+    private VendedorService vendedorService;
+
+    @Autowired
     private EnderecoRepository enderecoRepository;
 
     public ClienteDTO getById(int id) {
@@ -150,6 +153,9 @@ public class ClienteService {
             Cliente cliente = clienteRepository.findByIdAndAtivoTrue(idAlvo)
                     .orElseThrow(() -> new RegistroInexistenteException("Não foi encontrado nenhum cliente ativo com o ID: " + idAlvo));
             cliente.setAtivo(false);
+
+            vendedorService.deleteVendedor(idAlvo, idUsuarioAuth);
+
             clienteRepository.save(cliente);
             return;
         }

@@ -2,6 +2,7 @@ package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Cliente;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.ClienteDTO;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.CadastroClienteDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.LoginDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.ReturnModel;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.RequisicaoIncompletaException;
@@ -112,8 +113,8 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.getAllClientes());
     }
 
-    @Operation(summary = "Cadastra um novo cliente",
-            description = "Cria a conta do cliente. CPF/CNPJ e e-mail precisam ser únicos, e a senha é validada e depois criptografada antes de salvar. Endpoint público — usado antes do login.")
+    @Operation(summary = "Cadastra ou reativa um cliente",
+            description = "Cria uma conta nova ou reativa uma conta desativada quando e-mail e CPF/CNPJ conferem. A senha é validada e criptografada antes de salvar. Endpoint público — usado antes do login.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cliente criado com sucesso.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReturnModel.class),
@@ -161,7 +162,7 @@ public class ClienteController {
                             }))
     })
     @PostMapping("/create")
-    public ResponseEntity<ClienteDTO> createCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<CadastroClienteDTO> createCliente(@RequestBody Cliente cliente) {
         return ResponseEntity.ok(clienteService.createCliente(cliente));
     }
 
@@ -325,12 +326,12 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.updateEndereco(idEndereco, idUsuarioAuth));
     }
 
-    @Operation(summary = "Exclui a conta do cliente",
-            description = "Só é permitido excluir a própria conta (idAlvo precisa ser igual ao usuário autenticado).",
+    @Operation(summary = "Desativa a conta do cliente",
+            description = "Só é permitido desativar a própria conta (idAlvo precisa ser igual ao usuário autenticado). Os dados são preservados e a conta pode ser reativada pelo cadastro com o mesmo e-mail e CPF/CNPJ.",
             security = @SecurityRequirement(name = "basicAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Conta excluída com sucesso (sem corpo)."),
-            @ApiResponse(responseCode = "401", description = "Tentativa de excluir a conta de outro cliente.",
+            @ApiResponse(responseCode = "200", description = "Conta desativada com sucesso."),
+            @ApiResponse(responseCode = "401", description = "Tentativa de desativar a conta de outro cliente.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReturnModel.class),
                             examples = @ExampleObject(name = "Conta de terceiro", value = """
                                     {
@@ -338,13 +339,13 @@ public class ClienteController {
                                         "path": "/api/cliente/2",
                                         "success": false,
                                         "quantity": 1,
-                                        "errors": { "status": 401, "message": "Apenas é permitido deletar a própria conta.", "hour": "2026-09-20T14:30:00" }
+                                        "errors": { "status": 401, "message": "Apenas é permitido desativar a própria conta.", "hour": "2026-09-20T14:30:00" }
                                     }
                                     """)))
     })
     @DeleteMapping("/{idAlvo}")
-    public ResponseEntity<Void> deleteCliente(@Parameter(description = "ID da própria conta a excluir.", example = "1") @PathVariable("idAlvo") int idAlvo, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+    public ResponseEntity<Map<String, String>> deleteCliente(@Parameter(description = "ID da própria conta a desativar.", example = "1") @PathVariable("idAlvo") int idAlvo, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         clienteService.delete(idAlvo, idUsuarioAuth);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Map.of("mensagem", "Conta desativada com sucesso."));
     }
 }

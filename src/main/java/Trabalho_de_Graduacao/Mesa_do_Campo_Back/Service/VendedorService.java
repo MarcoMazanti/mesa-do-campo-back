@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,7 +27,7 @@ public class VendedorService {
         if (vendedorOptional.isPresent()) {
             Vendedor vendedor = vendedorOptional.get();
 
-            Optional<Cliente> clienteOptional = clienteRepository.findById(vendedor.getIdVendedor());
+            Optional<Cliente> clienteOptional = clienteRepository.findByIdAndAtivoTrue(vendedor.getIdVendedor());
 
             if (clienteOptional.isPresent()) {
                 Cliente cliente = clienteOptional.get();
@@ -45,14 +46,14 @@ public class VendedorService {
         List<Vendedor> vendedorList = vendedorRepository.findAll();
 
         return vendedorList.stream().map(vendedor -> {
-            Optional<Cliente> clienteOptional = clienteRepository.findById(vendedor.getIdVendedor());
+            Optional<Cliente> clienteOptional = clienteRepository.findByIdAndAtivoTrue(vendedor.getIdVendedor());
 
             if (clienteOptional.isPresent()) {
                 Cliente cliente = clienteOptional.get();
                 return EntityToDTO(vendedor, cliente);
             }
             return null;
-        }).toList();
+        }).filter(Objects::nonNull).toList();
     }
 
     public VendedorDTO createVendedor(Vendedor vendedor) {
@@ -60,7 +61,7 @@ public class VendedorService {
 
         if (vendedorOptional.isPresent()) throw new SolicitacaoNegadaException("Já existe um vendedor com esse ID cadastrado.");
 
-        Optional<Cliente> clienteOptional = clienteRepository.findById(vendedor.getIdVendedor());
+        Optional<Cliente> clienteOptional = clienteRepository.findByIdAndAtivoTrue(vendedor.getIdVendedor());
 
         if (clienteOptional.isPresent()) {
             Cliente cliente = clienteOptional.get();
@@ -78,7 +79,7 @@ public class VendedorService {
                 Vendedor vendedorBanco = vendedorOptional.get();
                 vendedorBanco.setAvaliacao(vendedorDTO.avaliacao());
 
-                Optional<Cliente> clienteOptional = clienteRepository.findById(vendedorDTO.idVendedor());
+                Optional<Cliente> clienteOptional = clienteRepository.findByIdAndAtivoTrue(vendedorDTO.idVendedor());
 
                 if (clienteOptional.isPresent()) {
                     Cliente cliente = clienteOptional.get();

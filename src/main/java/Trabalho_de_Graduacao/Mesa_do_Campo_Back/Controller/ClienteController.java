@@ -1,6 +1,7 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Cliente;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.CadastroClienteDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.ClienteDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.CadastroClienteDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.LoginDTO;

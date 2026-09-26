@@ -1,5 +1,6 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller;
 
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.CadastroVendedorDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.VendedorDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.ReturnModel;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Vendedor;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "Vendedor")
 @HybridEncrypted
@@ -194,6 +196,6 @@ public class VendedorController {
     @DeleteMapping("/{idAlvo}")
     public ResponseEntity<Void> deleteVendedor(@Parameter(description = "ID da própria conta de vendedor a excluir.", example = "1") @PathVariable("idAlvo") int idAlvo, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
         vendedorService.deleteVendedor(idAlvo, idUsuarioAuth);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Map.of("mensagem", "Perfil de vendedor desativado com sucesso."));
     }
 }

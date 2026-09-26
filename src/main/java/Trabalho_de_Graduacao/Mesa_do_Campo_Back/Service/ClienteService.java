@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -112,7 +111,10 @@ public class ClienteService {
             }
         }
 
-        throw new SolicitacaoNegadaException("Não é permitido alterar o CPF ou CNPJ de um cliente.");
+        clienteBanco.setNome(clienteDTO.nome());
+        clienteBanco.setTelefone(clienteDTO.telefone());
+        clienteBanco.setIdEnderecoEntrega(clienteDTO.idEnderecoEntrega());
+        return entityToDTO(clienteRepository.save(clienteBanco));
     }
 
     public ClienteDTO updateSenha(String senha, int idUsuarioAuth) {
@@ -135,13 +137,16 @@ public class ClienteService {
         }
         Optional<Cliente> clienteOptional = clienteRepository.findByIdAndAtivoTrue(idUsuarioAuth);
 
-        if (clienteOptional.isPresent()) {
-            Cliente clienteBanco = clienteOptional.get();
-            clienteBanco.setIdEnderecoEntrega(idEndereco);
-            return EntityToDTO(clienteRepository.save(clienteBanco));
+    @Transactional
+    public void delete(int idAlvo, int idUsuarioAuth) {
+        if (idUsuarioAuth != idAlvo) {
+            throw new SolicitacaoNegadaException("Apenas é permitido desativar a própria conta.");
         }
 
-        throw new RegistroInexistenteException("Não foi encontrado nenhum cliente com o ID: " + idUsuarioAuth);
+        Cliente cliente = clienteRepository.findByIdAndAtivoTrue(idAlvo)
+                .orElseThrow(() -> new RegistroInexistenteException("Não foi encontrado nenhum cliente ativo com o ID: " + idAlvo));
+        cliente.setAtivo(false);
+        clienteRepository.save(cliente);
     }
 
     @Transactional

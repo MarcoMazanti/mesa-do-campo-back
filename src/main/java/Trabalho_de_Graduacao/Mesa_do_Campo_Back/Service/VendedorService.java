@@ -1,6 +1,7 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Cliente;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.CadastroVendedorDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.VendedorDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Vendedor;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.RegistroInexistenteException;
@@ -9,6 +10,7 @@ import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Repository.ClienteRepository;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Repository.VendedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -68,7 +70,12 @@ public class VendedorService {
             return EntityToDTO(vendedorRepository.save(vendedor), cliente);
         }
 
-        throw new RegistroInexistenteException("Não foi encontrado nenhum cliente com o ID: " + vendedor.getIdVendedor());
+        Cliente cliente = clienteRepository.findByIdAndAtivoTrue(vendedor.getIdVendedor())
+                .orElseThrow(() -> new RegistroInexistenteException("Não foi encontrado nenhum cliente ativo com o ID: " + vendedor.getIdVendedor()));
+
+        return vendedorRepository.findByIdVendedor(vendedor.getIdVendedor())
+                .map(vendedorBanco -> reativarVendedor(vendedorBanco, vendedor, cliente))
+                .orElseGet(() -> criarNovoVendedor(vendedor, cliente));
     }
 
     public VendedorDTO updateVendedor(VendedorDTO vendedorDTO, int idUsuarioAuth) {
@@ -87,30 +94,49 @@ public class VendedorService {
                     cliente.setEmail(vendedorDTO.email());
                     cliente.setTelefone(vendedorDTO.telefone());
 
-                    clienteRepository.save(cliente);
+        Vendedor vendedorBanco = vendedorRepository.findByIdVendedorAndAtivoTrue(vendedorDTO.idVendedor())
+                .orElseThrow(() -> new RegistroInexistenteException("Não foi encontrado nenhum vendedor ativo com o ID: " + vendedorDTO.idVendedor()));
+        Cliente cliente = clienteRepository.findByIdAndAtivoTrue(vendedorDTO.idVendedor())
+                .orElseThrow(() -> new RegistroInexistenteException("Não foi encontrado nenhum cliente ativo com o ID: " + vendedorDTO.idVendedor()));
 
-                    return EntityToDTO(vendedorRepository.save(vendedorBanco), cliente);
-                }
+        vendedorBanco.setAvaliacao(vendedorDTO.avaliacao());
+        cliente.setNome(vendedorDTO.nome());
+        cliente.setEmail(vendedorDTO.email());
+        cliente.setTelefone(vendedorDTO.telefone());
 
-                throw new RegistroInexistenteException("Não foi encontrado nenhum cliente com o ID: " + vendedorDTO.idVendedor());
-            }
-
-            throw new RegistroInexistenteException("Não foi encontrado nenhum vendedor com o ID: " + vendedorDTO.idVendedor());
-        }
-
-        throw new SolicitacaoNegadaException("Apenas o vendedor pode alterar seus dados.");
+        clienteRepository.save(cliente);
+        return entityToDTO(vendedorRepository.save(vendedorBanco), cliente);
     }
 
+    @Transactional
     public void deleteVendedor(int idAlvo, int idUsuarioAuth) {
-        if (idAlvo == idUsuarioAuth) {
-            vendedorRepository.deleteById(idAlvo);
-            return;
+        if (idAlvo != idUsuarioAuth) {
+            throw new SolicitacaoNegadaException("Apenas o vendedor pode desativar seu próprio perfil.");
         }
 
-        throw new SolicitacaoNegadaException("Apenas o vendedor pode excluir seus dados.");
+        Vendedor vendedor = vendedorRepository.findByIdVendedorAndAtivoTrue(idAlvo)
+                .orElseThrow(() -> new RegistroInexistenteException("Não foi encontrado nenhum perfil de vendedor ativo com o ID: " + idAlvo));
+        vendedor.setAtivo(false);
+        vendedorRepository.save(vendedor);
     }
 
-    private VendedorDTO EntityToDTO(Vendedor vendedor, Cliente cliente) {
+    private CadastroVendedorDTO criarNovoVendedor(Vendedor vendedor, Cliente cliente) {
+        vendedor.setAtivo(true);
+        return new CadastroVendedorDTO(entityToDTO(vendedorRepository.save(vendedor), cliente), false);
+    }
+
+    private CadastroVendedorDTO reativarVendedor(Vendedor vendedorBanco, Vendedor novoCadastro, Cliente cliente) {
+        if (vendedorBanco.isAtivo()) {
+            throw new SolicitacaoNegadaException("Você já possui um perfil de vendedor ativo.");
+        }
+
+        vendedorBanco.setContaRecebimento(novoCadastro.getContaRecebimento());
+        vendedorBanco.setTipoPagamento(novoCadastro.getTipoPagamento());
+        vendedorBanco.setAtivo(true);
+        return new CadastroVendedorDTO(entityToDTO(vendedorRepository.save(vendedorBanco), cliente), true);
+    }
+
+    private VendedorDTO entityToDTO(Vendedor vendedor, Cliente cliente) {
         return new VendedorDTO(
                 vendedor.getIdVendedor(),
                 cliente.getNome(),

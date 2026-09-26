@@ -1,0 +1,6 @@
+package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO;
+
+public record CadastroVendedorDTO(
+        VendedorDTO vendedor,
+        boolean perfilReativado) {
+}

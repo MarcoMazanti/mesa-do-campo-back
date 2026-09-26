@@ -1,10 +1,12 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller.Advice;
 
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.External.BatchModel;
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.External.ErrorResponse;
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.External.ReturnModel;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.BatchModel;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.ErrorResponse;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.ReturnModel;
 import org.jspecify.annotations.Nullable;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -18,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Order(Ordered.HIGHEST_PRECEDENCE + 100)
 @ControllerAdvice
 public class ModelResponseAdivice implements ResponseBodyAdvice<Object> {
     private final ObjectMapper mapper = new ObjectMapper();
@@ -36,6 +39,11 @@ public class ModelResponseAdivice implements ResponseBodyAdvice<Object> {
 
         if (body == null) return null;
         if (body instanceof ReturnModel) return body;
+
+        // A especificação OpenAPI precisa manter o formato original para o Swagger UI.
+        String path = request.getURI().getPath();
+        if (path.startsWith("/api-docs") || path.startsWith("/v3/api-docs")
+                || path.equals("/api/crypto/public-key")) return body;
 
         String limitHeader = request.getHeaders().getFirst("limit");
         String batchHeader = request.getHeaders().getFirst("batch");

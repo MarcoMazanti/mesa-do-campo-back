@@ -1,6 +1,7 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Config;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Cliente;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.SolicitacaoNegadaException;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Repository.ClienteRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 
-import static Trabalho_de_Graduacao.Mesa_do_Campo_Back.Security.ManagementHash.validarSenha;
+import static Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.ManagementHash.validarSenha;
 
 @Component
 public class Interceptador implements HandlerInterceptor {
@@ -25,17 +26,11 @@ public class Interceptador implements HandlerInterceptor {
 
         try {
             if (authHeader == null || authHeader.isBlank()) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().write("Não foi fornecido uma autenticação.");
-                return false;
+                throw new SolicitacaoNegadaException("Não foi fornecida uma autenticação.");
             }
 
             if (!authHeader.split(" ")[0].contains("Basic")) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().write("Modelo de autenticação incorreta, utilize Basic Auth.");
-                return false;
+                throw new SolicitacaoNegadaException("Modelo de autenticação incorreto; utilize Basic Auth.");
             }
 
             // Garante que pega apenas a parte Base64 após "Basic "
@@ -58,13 +53,11 @@ public class Interceptador implements HandlerInterceptor {
                 }
             }
 
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("Não foi identificado a conta desejada.");
-            return false;
+            throw new SolicitacaoNegadaException("Não foi identificada a conta desejada.");
+        } catch (SolicitacaoNegadaException e) {
+            throw e;
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return false;
+            throw new SolicitacaoNegadaException("Não foi possível validar a autenticação.");
         }
     }
 }

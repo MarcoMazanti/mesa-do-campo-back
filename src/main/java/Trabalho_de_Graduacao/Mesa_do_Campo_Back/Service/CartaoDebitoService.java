@@ -6,6 +6,7 @@ import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.SolicitacaoNegadaExcep
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Repository.CartaoDebitoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +30,7 @@ public class CartaoDebitoService {
     }
 
     public List<CartaoDebito> getAllCartaoDebitoByIdCliente(int idUsuarioAuth) {
-        List<CartaoDebito> cartaoDebitoList = cartaoDebitoRepository.findAllByIdCliente(idUsuarioAuth);
-
-        if (cartaoDebitoList.isEmpty()) throw new RegistroInexistenteException("Não possui nenhum cartão de débito cadastrado para este usuário.");
-
-        return cartaoDebitoList;
+        return cartaoDebitoRepository.findAllByIdCliente(idUsuarioAuth);
     }
 
     public CartaoDebito getCartaoDebitoAtivo(int idUsuarioAuth) {
@@ -75,6 +72,7 @@ public class CartaoDebitoService {
         throw new RegistroInexistenteException("Não foi encontrado o cartão solicitado para atualizar.");
     }
 
+    @Transactional
     public CartaoDebito ativarCartaoDebito(int id, int idUsuarioAuth) {
         List<CartaoDebito> cartaoDebitoList = getAllCartaoDebitoByIdCliente(idUsuarioAuth);
 
@@ -118,6 +116,7 @@ public class CartaoDebitoService {
             if (cartaoDebitoBanco.getIdCliente() != idUsuarioAuth) throw new SolicitacaoNegadaException("Não se pode deletar um cartão de terceiro");
 
             cartaoDebitoRepository.deleteById(id);
+            return;
         }
 
         throw new RegistroInexistenteException("Não foi encontrado um cartão de débito com o ID: " + id + "para o cliente com o ID: " + idUsuarioAuth + " para deletar.");

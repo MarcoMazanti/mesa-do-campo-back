@@ -6,6 +6,7 @@ import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.SolicitacaoNegadaExcep
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Repository.ChavePixRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +30,7 @@ public class ChavePixService {
     }
 
     public List<ChavePix> getAllChavePixByIdCliente(int idUsuarioAuth) {
-        List<ChavePix> chavePixList = chavePixRepository.findAllByIdCliente(idUsuarioAuth);
-
-        if (chavePixList.isEmpty()) throw new RegistroInexistenteException("Não possui nenhuma chave pix cadastrada para este usuário.");
-
-        return chavePixList;
+        return chavePixRepository.findAllByIdCliente(idUsuarioAuth);
     }
 
     public ChavePix getChavePixAtivo(int idUsuarioAuth) {
@@ -74,6 +71,7 @@ public class ChavePixService {
         throw new RegistroInexistenteException("Não foi encontrado a chave pix solicitada para atualizar.");
     }
 
+    @Transactional
     public ChavePix ativarChavePix(int id, int idUsuarioAuth) {
         List<ChavePix> chavePixList = getAllChavePixByIdCliente(idUsuarioAuth);
 
@@ -117,6 +115,7 @@ public class ChavePixService {
             if (chavePixBanco.getIdCliente() != idUsuarioAuth) throw new SolicitacaoNegadaException("Não se pode deletar uma chave de terceiro");
 
             chavePixRepository.deleteById(id);
+            return;
         }
 
         throw new RegistroInexistenteException("Não foi encontrado uma chave pix com o ID: " + id + "para o cliente com o ID: " + idUsuarioAuth + " para deletar.");

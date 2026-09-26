@@ -12,6 +12,6 @@ import java.util.Optional;
 @Repository
 public interface PagamentoRepository extends JpaRepository<Pagamento, Integer> {
     Optional<Pagamento> findByIdPedido(int idPedido);
-    @Query("SELECT pag FROM pagamento pag JOIN pedido ped ON pag.idPedido = ped.id WHERE ped.idUsuario = :idUsuario")
-    List<Pagamento> findAllByIdUsuario(@Param("idUsuario") int idUsuario);
+    @Query("SELECT pag FROM pagamento pag JOIN pedido ped ON pag.idPedido = ped.id WHERE ped.idCliente = :idCliente")
+    List<Pagamento> findAllByIdCliente(@Param("idCliente") int idCliente);
 }

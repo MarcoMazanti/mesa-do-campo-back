@@ -31,25 +31,25 @@ public class ProdutoService {
     }
 
     public List<Produto> getAllProdutosByIdVendedor(int idVendedor) {
-        List<Produto> produtoList = produtoRepository.findAllByIdVendedor(idVendedor);
+        List<Produto> produtoList = produtoRepository.findAllByIdVendedorAndAtivoTrue(idVendedor);
 
-        if (produtoList.isEmpty()) throw new RegistroInexistenteException("Não foi encontrado nenhum produto para este vendedor.");
+        if (produtoList.isEmpty()) throw new RegistroInexistenteException("Não foi encontrado nenhum produto ativo para este vendedor.");
 
         return produtoList;
     }
 
     public List<Produto> getAllProdutos() {
-        List<Produto> produtoList = produtoRepository.findAll();
+        List<Produto> produtoList = produtoRepository.findAllByAtivoTrue();
 
-        if (produtoList.isEmpty()) throw new RegistroInexistenteException("Não possui produtos cadastrados.");
+        if (produtoList.isEmpty()) throw new RegistroInexistenteException("Não possui produtos ativos cadastrados.");
 
         return produtoList;
     }
 
     public List<Produto> getAllProdutosByCategoria(CategoriaProduto categoria) {
-        List<Produto> produtoList = produtoRepository.findAllByCategoria(categoria.toString());
+        List<Produto> produtoList = produtoRepository.findAllByCategoriaAndAtivoTrue(categoria);
 
-        if (produtoList.isEmpty()) throw new RegistroInexistenteException("Não possui produtos cadastrados.");
+        if (produtoList.isEmpty()) throw new RegistroInexistenteException("Não possui produtos ativos cadastrados nesta categoria.");
 
         return produtoList;
     }
@@ -81,7 +81,7 @@ public class ProdutoService {
             return produtoRepository.save(produtoBanco);
         }
 
-        throw new RegistroInexistenteException("Não foi encontrado nenhum produto com o ID: " + produto.getId() + "para atualizar.");
+        throw new RegistroInexistenteException("Não foi encontrado nenhum produto com o ID: " + produto.getId() + " para atualizar.");
     }
 
     public void deleteProduto(int idAlvo, int idUsuarioAuth) {
@@ -92,10 +92,11 @@ public class ProdutoService {
 
             if (produtoBanco.getIdVendedor() != idUsuarioAuth) throw new SolicitacaoNegadaException("Apenas o vendedor pode excluir os produtos.");
 
-            produtoRepository.deleteById(idAlvo);
+            produtoBanco.setAtivo(false);
+            produtoRepository.save(produtoBanco);
             return;
         }
 
-        throw new RegistroInexistenteException("Não foi encontrado nenhum produto com o ID: " + idAlvo + "para excluir.");
+        throw new RegistroInexistenteException("Não foi encontrado nenhum produto com o ID: " + idAlvo + " para excluir.");
     }
 }

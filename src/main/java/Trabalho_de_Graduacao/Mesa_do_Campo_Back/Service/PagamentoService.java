@@ -30,13 +30,13 @@ public class PagamentoService {
         Pedido pedido = pedidoRepository.findById(pagamento.getIdPedido())
                 .orElseThrow(() -> new RegistroInexistenteException("Pedido não encontrado."));
 
-        if (pedido.getIdUsuario() != idUsuarioAuth) throw new SolicitacaoNegadaException("Não é possível acessar esse pagamento.");
+        if (pedido.getIdCliente() != idUsuarioAuth) throw new SolicitacaoNegadaException("Não é possível acessar esse pagamento.");
 
         return pagamento;
     }
 
     public List<Pagamento> findAllByUsuario(int idUsuarioAuth) {
-        List<Pagamento> pagamentoList = pagamentoRepository.findAllByIdUsuario(idUsuarioAuth);
+        List<Pagamento> pagamentoList = pagamentoRepository.findAllByIdCliente(idUsuarioAuth);
 
         if (pagamentoList.isEmpty()) throw new RegistroInexistenteException("Nenhum pagamento encontrado para o usuário.");
 
@@ -48,7 +48,7 @@ public class PagamentoService {
         Pedido pedido = pedidoRepository.findById(idPedido)
                 .orElseThrow(() -> new RegistroInexistenteException("Pedido não encontrado."));
 
-        if (pedido.getIdUsuario() != idUsuarioAuth) {
+        if (pedido.getIdCliente() != idUsuarioAuth) {
             throw new SolicitacaoNegadaException("Este pedido não pertence ao usuário.");
         }
 
@@ -86,7 +86,7 @@ public class PagamentoService {
         Pedido pedido = pedidoRepository.findById(pagamento.getIdPedido())
                 .orElseThrow(() -> new RegistroInexistenteException("Pedido não encontrado."));
 
-        if (pedido.getIdUsuario() != idUsuarioAuth) {
+        if (pedido.getIdCliente() != idUsuarioAuth) {
             throw new SolicitacaoNegadaException("Não é possível alterar esse pagamento.");
         }
 

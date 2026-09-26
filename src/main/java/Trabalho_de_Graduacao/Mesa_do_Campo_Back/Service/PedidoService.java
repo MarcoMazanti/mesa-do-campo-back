@@ -36,7 +36,7 @@ public class PedidoService {
     private PagamentoRepository pagamentoRepository;
 
     public List<Pedido> getAllPedidosByUsuario(int idUsuarioAuth) {
-        List<Pedido> pedidos = pedidoRepository.findAllByIdUsuario(idUsuarioAuth);
+        List<Pedido> pedidos = pedidoRepository.findAllByIdCliente(idUsuarioAuth);
 
         if (pedidos.isEmpty()) throw new RegistroInexistenteException("Não existem pedidos para o usuário.");
 
@@ -47,7 +47,7 @@ public class PedidoService {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new RegistroInexistenteException("Pedido não encontrado."));
 
-        if (pedido.getIdUsuario() != idUsuarioAuth) {
+        if (pedido.getIdCliente() != idUsuarioAuth) {
             throw new SolicitacaoNegadaException("Este pedido não pertence ao usuário.");
         }
 
@@ -92,7 +92,7 @@ public class PedidoService {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new RegistroInexistenteException("Pedido não encontrado."));
 
-        if (pedido.getIdUsuario() != idUsuarioAuth) {
+        if (pedido.getIdCliente() != idUsuarioAuth) {
             throw new SolicitacaoNegadaException("Este pedido não pertence ao usuário.");
         }
 
@@ -105,7 +105,7 @@ public class PedidoService {
     }
 
     public Pedido createPedido(Pedido pedido, int idUsuarioAuth) {
-        if (pedido.getIdUsuario() != idUsuarioAuth) {
+        if (pedido.getIdCliente() != idUsuarioAuth) {
             throw new SolicitacaoNegadaException("Pedido não pertence ao usuário.");
         }
         return pedidoRepository.save(pedido);
@@ -145,7 +145,7 @@ public class PedidoService {
             Produto produto = produtoRepository.findById(itemDTO.getIdProduto())
                     .orElseThrow(() -> new RegistroInexistenteException("Produto não encontrado: " + itemDTO.getIdProduto()));
 
-            ItemPedido item = new ItemPedido(pedido.getId(), produto.getId(), itemDTO.getQuantidade(), produto.getPreco());
+            ItemPedido item = new ItemPedido(pedido.getId(), produto.getId(), itemDTO.getQuantidade(), produto.getPreco(), pedido.getDataCompra());
             itemPedidoRepository.save(item);
 
             produto.setQuantidade(produto.getQuantidade() - itemDTO.getQuantidade());
@@ -174,7 +174,7 @@ public class PedidoService {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new RegistroInexistenteException("Pedido não encontrado."));
 
-        if (pedido.getIdUsuario() != idUsuarioAuth) {
+        if (pedido.getIdCliente() != idUsuarioAuth) {
             throw new SolicitacaoNegadaException("Pedido não pertence ao usuário.");
         }
 

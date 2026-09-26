@@ -1,4 +1,4 @@
-package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.External;
+package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;

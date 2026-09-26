@@ -1,9 +1,10 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Enum.StatusItemPedido;
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.External.ReturnModel;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.ReturnModel;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.ItemPedido;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.ItemPedidoService;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.HybridEncrypted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,6 +24,7 @@ import java.util.Map;
 @Tag(name = "Item do Pedido")
 @SecurityRequirement(name = "basicAuth")
 @RestController
+@HybridEncrypted
 @RequestMapping("/api/item-pedido")
 public class ItemPedidoController {
     @Autowired

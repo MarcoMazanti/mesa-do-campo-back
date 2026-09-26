@@ -3,9 +3,10 @@ package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Cliente;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.ClienteDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.LoginDTO;
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.External.ReturnModel;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.ReturnModel;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.RequisicaoIncompletaException;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.ClienteService;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.HybridEncrypted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @Tag(name = "Cliente")
+@HybridEncrypted
 @RestController
 @RequestMapping("/api/cliente")
 public class ClienteController {

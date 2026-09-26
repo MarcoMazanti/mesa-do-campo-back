@@ -28,6 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/webjars/**",
 
                         // --- ROTAS PÚBLICAS DA API ---
+                        "/api/crypto/public-key",
                         "/api/cliente/all",
                         "/api/produto/all",
                         "/api/vendedor/all",

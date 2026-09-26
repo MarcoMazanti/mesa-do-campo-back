@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static Trabalho_de_Graduacao.Mesa_do_Campo_Back.Security.ManagementHash.encriptarSenha;
-import static Trabalho_de_Graduacao.Mesa_do_Campo_Back.Security.ManagementHash.validarSenha;
+import static Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.ManagementHash.encriptarSenha;
+import static Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.ManagementHash.validarSenha;
 
 @Service
 public class ClienteService {

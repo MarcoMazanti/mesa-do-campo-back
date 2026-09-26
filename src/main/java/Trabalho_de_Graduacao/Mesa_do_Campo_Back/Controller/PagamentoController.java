@@ -2,9 +2,10 @@ package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Enum.StatusPagamento;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Enum.TipoPagamento;
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.External.ReturnModel;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.ReturnModel;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Pagamento;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.PagamentoService;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.HybridEncrypted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,6 +24,7 @@ import java.util.List;
 @Tag(name = "Pagamento")
 @SecurityRequirement(name = "basicAuth")
 @RestController
+@HybridEncrypted
 @RequestMapping("/api/pagamentos")
 public class PagamentoController {
     @Autowired

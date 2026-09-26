@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface ItemPedidoRepository extends JpaRepository<ItemPedido, Integer> {
     List<ItemPedido> findAllByIdPedido(int idPedido);
-    @Query("SELECT ip FROM item_pedido ip JOIN produto p ON ip.idProduto = p.id WHERE p.idVendedor = :idVendedor")
+    @Query("SELECT ip FROM item_pedido ip JOIN produto p ON ip.idProduto = p.id WHERE p.idVendedor = :idVendedor ORDER BY ip.dataCompra DESC, ip.id DESC")
     List<ItemPedido> findAllByIdVendedor(@Param("idVendedor") int idVendedor);
 }

@@ -57,6 +57,11 @@ public class Cliente {
     @Column(name = "id_endereco_entrega")
     private Integer idEnderecoEntrega;
 
+    @Schema(description = "Indica se a conta está disponível. A exclusão de conta apenas altera este campo para false.",
+            example = "true", accessMode = Schema.AccessMode.READ_ONLY)
+    @Column(name = "ativo", nullable = false, columnDefinition = "boolean default true")
+    private boolean ativo = true;
+
     public Cliente(int id, String nome, String cpfCnpj, String email, String senha, String telefone) {
         this.id = id;
         this.nome = nome;
@@ -65,6 +70,7 @@ public class Cliente {
         this.senha = senha;
         this.telefone = telefone;
         idEnderecoEntrega = null;
+        ativo = true;
     }
 
     public Cliente(int id, String nome, String cpfCnpj, String email, String senha) {
@@ -74,6 +80,7 @@ public class Cliente {
         this.email = email;
         this.senha = senha;
         idEnderecoEntrega = null;
+        ativo = true;
     }
 
     public Cliente(int id, String nome, String cpfCnpj, String email, String senha, Integer idEnderecoEntrega) {
@@ -83,6 +90,7 @@ public class Cliente {
         this.email = email;
         this.senha = senha;
         this.idEnderecoEntrega = idEnderecoEntrega;
+        ativo = true;
     }
 
     public Cliente(String nome, String cpfCnpj, String email, String senha) {
@@ -91,5 +99,6 @@ public class Cliente {
         this.email = email;
         this.senha = senha;
         idEnderecoEntrega = null;
+        ativo = true;
     }
 }

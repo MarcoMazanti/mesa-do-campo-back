@@ -1,6 +1,7 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Cliente;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.CadastroClienteDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.ClienteDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.LoginDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.RegistroInexistenteException;
@@ -9,6 +10,7 @@ import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Repository.ClienteRepository;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,43 +26,65 @@ public class ClienteService {
     private ClienteRepository clienteRepository;
 
     @Autowired
+    private VendedorService vendedorService;
+
+    @Autowired
     private EnderecoRepository enderecoRepository;
 
     public ClienteDTO getById(int id) {
-        if (clienteRepository.existsById(id)) {
-            return EntityToDTO(clienteRepository.getReferenceById(id));
-        }
-
-        throw new RegistroInexistenteException("Não foi encontrado nenhum cliente com o ID: " + id);
+        return clienteRepository.findByIdAndAtivoTrue(id)
+                .map(this::EntityToDTO)
+                .orElseThrow(() -> new RegistroInexistenteException("Não foi encontrado nenhum cliente ativo com o ID: " + id));
     }
 
     public List<ClienteDTO> getAllClientes() {
         List<ClienteDTO> clienteDTOList = new ArrayList<>();
 
-        for (Cliente cliente : clienteRepository.findAll()) {
+        for (Cliente cliente : clienteRepository.findAllByAtivoTrue()) {
             clienteDTOList.add(EntityToDTO(cliente));
         }
 
         return clienteDTOList;
     }
 
-    public ClienteDTO createCliente(Cliente cliente) {
+    @Transactional
+    public CadastroClienteDTO createCliente(Cliente cliente) {
+        Optional<Cliente> clienteComMesmoEmail = clienteRepository.findByEmailIgnoreCase(cliente.getEmail());
+
+        if (clienteComMesmoEmail.isPresent()) {
+            Cliente clienteBanco = clienteComMesmoEmail.get();
+
+            if (clienteBanco.isAtivo()) {
+                throw new SolicitacaoNegadaException("Já existe uma conta ativa com esse e-mail.");
+            }
+            if (!clienteBanco.getCpfCnpj().equals(cliente.getCpfCnpj())) {
+                throw new SolicitacaoNegadaException("O CPF ou CNPJ informado não confere com a conta desativada.");
+            }
+
+            senhaValida(cliente.getSenha());
+            clienteBanco.setNome(cliente.getNome());
+            clienteBanco.setTelefone(cliente.getTelefone());
+            clienteBanco.setSenha(encriptarSenha(cliente.getSenha()));
+            clienteBanco.setAtivo(true);
+
+            return new CadastroClienteDTO(EntityToDTO(clienteRepository.save(clienteBanco)), true);
+        }
+
         if (clienteRepository.existsByCpfCnpj(cliente.getCpfCnpj())) {
             throw new SolicitacaoNegadaException("Já existe um cliente com esse CPF ou CNPJ cadastrado.");
         }
 
-        if (clienteRepository.existsAnyByEmail(cliente.getEmail())) {
-            throw new SolicitacaoNegadaException("Já existe um cliente com esse E-mail cadastrado.");
-        }
-
         senhaValida(cliente.getSenha());
+        cliente.setId(0);
+        cliente.setAtivo(true);
+        cliente.setIdEnderecoEntrega(null);
         cliente.setSenha(encriptarSenha(cliente.getSenha()));
 
-        return EntityToDTO(clienteRepository.save(cliente));
+        return new CadastroClienteDTO(EntityToDTO(clienteRepository.save(cliente)), false);
     }
 
     public ClienteDTO login(LoginDTO loginDTO) {
-        Optional<Cliente> clienteOptional = clienteRepository.findByEmail(loginDTO.email());
+        Optional<Cliente> clienteOptional = clienteRepository.findByEmailIgnoreCaseAndAtivoTrue(loginDTO.email());
 
         if (clienteOptional.isPresent()) {
             Cliente cliente = clienteOptional.get();
@@ -77,7 +101,7 @@ public class ClienteService {
         if (clienteDTO.id() != idUsuarioAuth) {
             throw new SolicitacaoNegadaException("Apenas é permitido alterar os próprios dados.");
         }
-        Optional<Cliente> clienteOptional = clienteRepository.findById(clienteDTO.id());
+        Optional<Cliente> clienteOptional = clienteRepository.findByIdAndAtivoTrue(clienteDTO.id());
         if (clienteOptional.isPresent()) {
             Cliente clienteBanco = clienteOptional.get();
 
@@ -97,7 +121,7 @@ public class ClienteService {
     public ClienteDTO updateSenha(String senha, int idUsuarioAuth) {
         senhaValida(senha);
 
-        Optional<Cliente> clienteOptional = clienteRepository.findById(idUsuarioAuth);
+        Optional<Cliente> clienteOptional = clienteRepository.findByIdAndAtivoTrue(idUsuarioAuth);
 
         if (clienteOptional.isPresent()) {
             Cliente clienteBanco = clienteOptional.get();
@@ -112,7 +136,7 @@ public class ClienteService {
         if (!enderecoRepository.existsByIdAndIdUsuario(idEndereco, idUsuarioAuth)) {
             throw new SolicitacaoNegadaException("O endereço de entrega precisa pertencer ao cliente autenticado.");
         }
-        Optional<Cliente> clienteOptional = clienteRepository.findById(idUsuarioAuth);
+        Optional<Cliente> clienteOptional = clienteRepository.findByIdAndAtivoTrue(idUsuarioAuth);
 
         if (clienteOptional.isPresent()) {
             Cliente clienteBanco = clienteOptional.get();
@@ -123,17 +147,20 @@ public class ClienteService {
         throw new RegistroInexistenteException("Não foi encontrado nenhum cliente com o ID: " + idUsuarioAuth);
     }
 
+    @Transactional
     public void delete(int idAlvo, int idUsuarioAuth) {
         if (idUsuarioAuth == idAlvo) {
-            if (clienteRepository.existsById(idAlvo)) {
-                clienteRepository.deleteById(idAlvo);
-                return;
-            }
+            Cliente cliente = clienteRepository.findByIdAndAtivoTrue(idAlvo)
+                    .orElseThrow(() -> new RegistroInexistenteException("Não foi encontrado nenhum cliente ativo com o ID: " + idAlvo));
+            cliente.setAtivo(false);
 
-            throw new RegistroInexistenteException("Não foi encontrado nenhum cliente com o ID: " + idAlvo);
+            vendedorService.deleteVendedor(idAlvo, idUsuarioAuth);
+
+            clienteRepository.save(cliente);
+            return;
         }
 
-        throw new SolicitacaoNegadaException("Apenas é permitido deletar a própria conta.");
+        throw new SolicitacaoNegadaException("Apenas é permitido desativar a própria conta.");
     }
 
     private void senhaValida(String senha) {

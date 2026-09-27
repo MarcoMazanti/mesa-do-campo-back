@@ -43,7 +43,7 @@ public class Interceptador implements HandlerInterceptor {
             String nome = autenticacao.split(":")[0];
             String senha = autenticacao.split(":")[1];
 
-            List<Cliente> clienteList = clienteRepository.findAllByNome(nome);
+            List<Cliente> clienteList = clienteRepository.findAllByNomeAndAtivoTrue(nome);
 
             for (Cliente cliente : clienteList) {
                 if (validarSenha(senha, cliente.getSenha())) {

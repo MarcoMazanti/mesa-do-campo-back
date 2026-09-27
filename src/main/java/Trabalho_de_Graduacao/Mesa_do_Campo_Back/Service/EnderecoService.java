@@ -57,7 +57,7 @@ public class EnderecoService {
     @Transactional
     public void delete(int id, int idUsuarioAuth) {
         if (enderecoRepository.existsByIdAndIdUsuario(id, idUsuarioAuth)) {
-            clienteRepository.findById(idUsuarioAuth).ifPresent(cliente -> {
+            clienteRepository.findByIdAndAtivoTrue(idUsuarioAuth).ifPresent(cliente -> {
                 if (Integer.valueOf(id).equals(cliente.getIdEnderecoEntrega())) {
                     cliente.setIdEnderecoEntrega(null);
                     clienteRepository.save(cliente);

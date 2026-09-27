@@ -44,21 +44,29 @@ public class Vendedor {
     @Column(name = "tipo_pagamento")
     private TipoPagamento tipoPagamento;
 
+    @Schema(description = "Indica se o vendedor está disponível. A exclusão de conta apenas altera este campo para false.",
+            example = "true", accessMode = Schema.AccessMode.READ_ONLY)
+    @Column(name = "ativo", nullable = false, columnDefinition = "boolean default true")
+    private boolean ativo = true;
+
     public Vendedor(int idVendedor) {
         this.idVendedor = idVendedor;
         avaliacao = 0;
         dataAdmissao = LocalDate.now();
+        ativo = true;
     }
 
     public Vendedor(int idVendedor, float avaliacao) {
         this.idVendedor = idVendedor;
         this.avaliacao = avaliacao;
         this.dataAdmissao = LocalDate.now();
+        ativo = true;
     }
 
     public Vendedor(int idVendedor, LocalDate dataAdmissao) {
         this.idVendedor = idVendedor;
         this.dataAdmissao = dataAdmissao;
         avaliacao = 0;
+        ativo = true;
     }
 }

@@ -1,7 +1,7 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller.Advice;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.EnvelopeRequestDTO;
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.CryptoException;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.CryptoException;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.CryptoService;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.HybridCryptoContext;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.HybridEncrypted;

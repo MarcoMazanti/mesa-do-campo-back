@@ -1,6 +1,7 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.EnvelopeResponseDTO;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.CryptoException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

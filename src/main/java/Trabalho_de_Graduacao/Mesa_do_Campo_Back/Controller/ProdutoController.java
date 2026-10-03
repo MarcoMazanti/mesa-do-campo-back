@@ -28,7 +28,8 @@ public class ProdutoController {
     @Autowired
     private ProdutoService produtoService;
 
-    @Operation(summary = "Busca um produto por ID", description = "Catálogo público — não exige autenticação.")
+    @Operation(summary = "Busca um produto por ID",
+            description = "Catálogo público — não exige autenticação.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Produto encontrado.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReturnModel.class),
@@ -60,7 +61,8 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.getById(id));
     }
 
-    @Operation(summary = "Lista os produtos de um vendedor", description = "Catálogo público — não exige autenticação. Usado em \"Meu Negócio\" e na página de um vendedor.")
+    @Operation(summary = "Lista os produtos de um vendedor",
+            description = "Catálogo público — não exige autenticação. Usado em \"Meu Negócio\" e na página de um vendedor.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReturnModel.class),
@@ -93,7 +95,8 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.getAllProdutosByIdVendedor(idVendedor));
     }
 
-    @Operation(summary = "Lista todo o catálogo", description = "Catálogo público — não exige autenticação. Cortado em lotes (headers limit/batch).")
+    @Operation(summary = "Lista todo o catálogo",
+            description = "Catálogo público — não exige autenticação. Cortado em lotes (headers limit/batch).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReturnModel.class),
@@ -163,6 +166,16 @@ public class ProdutoController {
     @GetMapping("/categoria/{categoria}")
     public ResponseEntity<List<Produto>> getProdutoByCategoria(@Parameter(description = "Nome da categoria (case-insensitive).", example = "verduras") @PathVariable("categoria") String categoria) {
         return ResponseEntity.ok(produtoService.getAllProdutosByCategoria(CategoriaProduto.valueOf(categoria.toUpperCase())));
+    }
+
+    @GetMapping("/name/{nome}")
+    public ResponseEntity<List<Produto>> getProdutoByName(@Parameter(description = "Nome do produto (case-insensitive).", example = "batata") @PathVariable("nome") String nome) {
+        return ResponseEntity.ok(produtoService.getAllProdutosByName(nome));
+    }
+
+    @GetMapping("/auto/name/{nome}")
+    public ResponseEntity<List<Produto>> getProdutoOfSellerByName(@Parameter(description = "Nome do produto (case-insensitive).", example = "batata") @PathVariable("nome") String nome, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+        return ResponseEntity.ok(produtoService.getProdutoOfSellerByName(nome, idUsuarioAuth));
     }
 
     @Operation(summary = "Cadastra um novo produto",
@@ -255,7 +268,8 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.updateProduto(produto, idUsuarioAuth));
     }
 
-    @Operation(summary = "Exclui um produto", description = "Só o vendedor dono do produto pode excluí-lo.",
+    @Operation(summary = "Exclui um produto",
+            description = "Só o vendedor dono do produto pode excluí-lo.",
             security = @SecurityRequirement(name = "basicAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Produto excluído com sucesso (sem corpo)."),

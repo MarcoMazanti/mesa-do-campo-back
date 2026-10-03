@@ -1,17 +1,23 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service;
 
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.CartaoCredito;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.CartaoDebito;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.ChavePix;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Cliente;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.CadastroClienteDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.ClienteDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.LoginDTO;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.MetodoPagamentoDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.RegistroInexistenteException;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.SolicitacaoNegadaException;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Repository.ClienteRepository;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Repository.EnderecoRepository;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,12 +30,18 @@ import static Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.Manageme
 public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
-
     @Autowired
     private VendedorService vendedorService;
-
     @Autowired
     private EnderecoRepository enderecoRepository;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private CartaoCreditoService cartaoCreditoService;
+    @Autowired
+    private CartaoDebitoService cartaoDebitoService;
+    @Autowired
+    private ChavePixService chavePixService;
 
     public ClienteDTO getById(int id) {
         return clienteRepository.findByIdAndAtivoTrue(id)
@@ -45,6 +57,30 @@ public class ClienteService {
         }
 
         return clienteDTOList;
+    }
+
+    public MetodoPagamentoDTO getAllMethodOfPayments(int idUsuarioAuth) {
+        Optional<Cliente> clienteOptional = clienteRepository.findByIdAndAtivoTrue(idUsuarioAuth);
+        if (clienteOptional.isEmpty()) throw new RegistroInexistenteException("Não foi encontrado nenhum cliente ativo com o ID: " + idUsuarioAuth);
+
+        List<CartaoCredito> cartaoCreditos = cartaoCreditoService.getAllCartaoCreditoByIdCliente(idUsuarioAuth);
+        List<CartaoDebito> cartaoDebitos = cartaoDebitoService.getAllCartaoDebitoByIdCliente(idUsuarioAuth);
+        List<ChavePix> chavesPix = chavePixService.getAllChavePixByIdCliente(idUsuarioAuth);
+
+        return new MetodoPagamentoDTO(cartaoCreditos, cartaoDebitos, chavesPix);
+    }
+
+    public void resetPassword(String email) {
+        Optional<Cliente> clienteOptional = clienteRepository.findByEmailIgnoreCase(email);
+        if (clienteOptional.isEmpty()) throw new RegistroInexistenteException("Não foi encontrado nenhum cliente com o e-mail: " + email);
+
+        Cliente cliente = clienteOptional.get();
+        String senhaNova = PasswordGenerator.generatePassword();
+        cliente.setSenha(encriptarSenha(senhaNova));
+        clienteRepository.save(cliente);
+
+        // Mandar e-mail com nova senha
+        emailService.sendEmail(cliente.getEmail(), null, "Mesa do Campo - Nova Senha", "Sua nova senha é: \"" + senhaNova + "\"", null);
     }
 
     @Transactional

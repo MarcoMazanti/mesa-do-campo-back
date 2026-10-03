@@ -1,4 +1,4 @@
-package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security;
+package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception;
 
 /** Erro de protocolo que pode ser exposto ao cliente sem revelar detalhes criptográficos. */
 public class CryptoException extends RuntimeException {

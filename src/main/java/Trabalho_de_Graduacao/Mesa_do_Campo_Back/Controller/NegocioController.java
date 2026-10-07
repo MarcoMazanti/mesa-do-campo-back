@@ -25,7 +25,7 @@ public class NegocioController {
 
     @GetMapping("/top_produtos/{quant}")
     public ResponseEntity<List<TopProdutoDTO>> getTopProdutos(@PathVariable("quant") int quant, @RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
-        List<TopProdutoDTO> topProdutos = negocioService.getTopProdutos(idUsuarioAuth, quant);
+        List<TopProdutoDTO> topProdutos = negocioService.getTopProdutos(quant, idUsuarioAuth);
         return ResponseEntity.ok(topProdutos);
     }
 

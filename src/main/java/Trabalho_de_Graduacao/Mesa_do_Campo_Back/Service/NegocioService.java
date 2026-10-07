@@ -24,17 +24,29 @@ public class NegocioService {
 
 
     public List<TopProdutoDTO> getTopProdutos(int quant, int idUsuarioAuth) {
-        return vendedorRepository.getTopProdutos(quant, idUsuarioAuth);
+        return vendedorRepository.getTopProdutos(quant, idUsuarioAuth).stream()
+                .map(linha -> new TopProdutoDTO(
+                        ((Number) linha[0]).intValue(),
+                        String.valueOf(linha[1]),
+                        ((Number) linha[2]).intValue(),
+                        ((Number) linha[3]).doubleValue(),
+                        ((Number) linha[4]).floatValue()))
+                .toList();
     }
 
     public List<VendasMensaisDTO> getVendasMensais(String dataInicio, String dataFim, int idUsuarioAuth) {
         if (dataInicio == null || dataInicio.trim().isEmpty() || dataFim == null || dataFim.trim().isEmpty()) {
             throw new RequisicaoIncompletaException("A data não pode ser nula ou vazia.");
         }
-        String dataInicioFormatada = validarEFormatarData(dataInicio);
-        String dataFimFormatada = validarEFormatarData(dataFim);
+        LocalDate dataInicioFormatada = validarEFormatarData(dataInicio);
+        LocalDate dataFimFormatada = validarEFormatarData(dataFim);
 
-        return vendedorRepository.getVendasMensais(dataInicioFormatada, dataFimFormatada, idUsuarioAuth);
+        return vendedorRepository.getVendasMensais(dataInicioFormatada, dataFimFormatada, idUsuarioAuth).stream()
+                .map(linha -> new VendasMensaisDTO(
+                        ((Number) linha[0]).intValue(),
+                        ((Number) linha[1]).intValue(),
+                        ((Number) linha[2]).doubleValue()))
+                .toList();
     }
 
     public List<ItemPedido> getItensVendidos(int id, StatusPedido status, CategoriaProduto categoria, int idUsuarioAuth) {
@@ -45,7 +57,7 @@ public class NegocioService {
         return vendedorRepository.getProdutosPorNome(nome, idUsuarioAuth);
     }
 
-    private String validarEFormatarData(String dataString) {
+    private LocalDate validarEFormatarData(String dataString) {
         List<String> formatosAceitos = List.of(
                 "dd/MM/uuuu",
                 "uuuu-MM-dd",
@@ -61,9 +73,9 @@ public class NegocioService {
 
                 LocalDate dataValida = LocalDate.parse(dataString.trim(), formatadorEntrada);
 
-                return dataValida.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                return dataValida;
             } catch (DateTimeParseException e) {
-                throw new IllegalArgumentException("Data inválida ou em formato não reconhecido: " + dataString);
+                // Tenta o próximo formato aceito antes de considerar a data inválida.
             }
         }
 

@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,12 +55,12 @@ public interface VendedorRepository extends JpaRepository<Vendedor, Integer> {
             "    SELECT\n" +
             "        0 AS id,\n" +
             "        'TOTAL' AS nome,\n" +
-            "        SUM(quantidade) AS quantidade,\n" +
-            "        SUM(valorVendido) AS valorVendido,\n" +
+            "        COALESCE(SUM(quantidade), 0) AS quantidade,\n" +
+            "        COALESCE(SUM(valorVendido), 0) AS valorVendido,\n" +
             "        100.00 AS percentual\n" +
             "    FROM base_agrupada\n" +
             ")", nativeQuery = true)
-    List<TopProdutoDTO> getTopProdutos(
+    List<Object[]> getTopProdutos(
             @Param("quant") int quant,
             @Param("idUsuarioAuth") int idUsuarioAuth);
 
@@ -72,13 +73,13 @@ public interface VendedorRepository extends JpaRepository<Vendedor, Integer> {
             "WHERE\n" +
             "   p.id_vendedor = :idUsuarioAuth AND\n" +
             "   p.ativo = TRUE AND\n" +
-            "   ip.data_compra >= :dataInicio AND\n" +
-            "   ip.data_compra <= :dataFim\n" +
+            "   ip.data_compra >= CAST(:dataInicio AS DATE) AND\n" +
+            "   ip.data_compra < CAST(:dataFim AS DATE) + INTERVAL '1 day'\n" +
             "GROUP BY ano, mes\n" +
             "ORDER BY ano, mes", nativeQuery = true)
-    List<VendasMensaisDTO> getVendasMensais(
-            @Param("dataInicio") String dataInicio,
-            @Param("dataFim") String dataFim,
+    List<Object[]> getVendasMensais(
+            @Param("dataInicio") LocalDate dataInicio,
+            @Param("dataFim") LocalDate dataFim,
             @Param("idUsuarioAuth") int idUsuarioAuth);
 
     @Query(value = "select\n" +
@@ -103,7 +104,7 @@ public interface VendedorRepository extends JpaRepository<Vendedor, Integer> {
             "where\n" +
             "   p.id_vendedor = :idUsuarioAuth and\n" +
             "   p.ativo = true and\n" +
-            "   p.nome ilike '%:nome%'", nativeQuery = true)
+            "   p.nome ILIKE CONCAT('%', :nome, '%')", nativeQuery = true)
     List<Produto> getProdutosPorNome(
             @Param("nome") String nome,
             @Param("idUsuarioAuth") int idUsuarioAuth);

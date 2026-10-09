@@ -1,10 +1,7 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller.Advice;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.ErrorResponse;
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.RegistroInexistenteException;
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.RequisicaoIncompletaException;
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.SolicitacaoNegadaException;
-import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.CryptoException;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.*;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -17,6 +14,7 @@ import java.time.LocalDateTime;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    // Erro 400 - Bad Request
     @ExceptionHandler(CryptoException.class)
     public ResponseEntity<Object> handleCryptoException(CryptoException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -42,6 +40,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleRegistroInexistenteException(RegistroInexistenteException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage(), LocalDateTime.now()));
+    }
+
+    // Erro 500 - Internal Server Error
+    @ExceptionHandler(EmailException.class)
+    public ResponseEntity<Object> handleEmailException(EmailException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), LocalDateTime.now()));
     }
 
     // Erro 500 - Internal Server Error

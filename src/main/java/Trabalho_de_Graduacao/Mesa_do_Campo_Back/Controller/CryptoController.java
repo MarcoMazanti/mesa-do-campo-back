@@ -2,6 +2,8 @@ package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.PublicKeyResponseDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.CryptoService;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.HybridEncrypted;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.TimeUnit;
 
-/** Endpoint público de bootstrap para o Web Crypto API do cliente. */
+@Tag(name = "Crypto")
+@HybridEncrypted
 @RestController
 @RequestMapping("/api/crypto")
 public class CryptoController {

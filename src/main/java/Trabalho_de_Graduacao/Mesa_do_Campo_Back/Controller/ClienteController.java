@@ -5,6 +5,7 @@ import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.ClienteDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.CadastroClienteDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.LoginDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.ReturnModel;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.MetodoPagamentoDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Exception.RequisicaoIncompletaException;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.ClienteService;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.HybridEncrypted;
@@ -58,7 +59,8 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.getById(idUsuarioAuth));
     }
 
-    @Operation(summary = "Busca um cliente por ID", description = "Retorna os dados públicos (sem a senha) de qualquer cliente cadastrado. Endpoint público.")
+    @Operation(summary = "Busca um cliente por ID",
+            description = "Retorna os dados públicos (sem a senha) de qualquer cliente cadastrado. Endpoint público.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cliente encontrado.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReturnModel.class),
@@ -90,7 +92,8 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.getById(id));
     }
 
-    @Operation(summary = "Lista todos os clientes", description = "Retorna todos os clientes cadastrados (sem a senha). Endpoint público, cortado em lotes (headers limit/batch).")
+    @Operation(summary = "Lista todos os clientes",
+            description = "Retorna todos os clientes cadastrados (sem a senha). Endpoint público, cortado em lotes (headers limit/batch).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso (pode vir vazia).",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReturnModel.class),
@@ -111,6 +114,17 @@ public class ClienteController {
     @GetMapping("/all")
     public ResponseEntity<List<ClienteDTO>> getAllClientes() {
         return ResponseEntity.ok(clienteService.getAllClientes());
+    }
+
+    @GetMapping("/metodo_pagamento")
+    public ResponseEntity<MetodoPagamentoDTO> getAllMethodOfPayments(@RequestAttribute("idUsuarioAuth") int idUsuarioAuth) {
+        return ResponseEntity.ok(clienteService.getAllMethodOfPayments(idUsuarioAuth));
+    }
+
+    @GetMapping("/reset/password/{email}")
+    public ResponseEntity<Void> resetPassword(@PathVariable("email") String email) {
+        clienteService.resetPassword(email);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Cadastra ou reativa um cliente",

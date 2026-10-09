@@ -54,6 +54,22 @@ public class ProdutoService {
         return produtoList;
     }
 
+    public List<Produto> getAllProdutosByName(String nome) {
+        List<Produto> produtoList = produtoRepository.findAllByNomeAndAtivoTrue(nome);
+
+        if (produtoList.isEmpty()) throw new RegistroInexistenteException("Não possui produtos ativos cadastrados com este nome.");
+
+        return produtoList;
+    }
+
+    public List<Produto> getProdutoOfSellerByName(String nome, int idUsuarioAuth) {
+        List<Produto> produtoList = produtoRepository.findAllByNomeAndAtivoTrueAndIdVendedor(nome, idUsuarioAuth);
+
+        if (produtoList.isEmpty()) throw new RegistroInexistenteException("Não possui produtos ativos cadastrados com este nome.");
+
+        return produtoList;
+    }
+
     public Produto createProduto(Produto produto, int idUsuarioAuth) {
         Optional<Vendedor> vendedorOptional = vendedorRepository.findByIdVendedor(produto.getIdVendedor());
 

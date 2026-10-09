@@ -1,8 +1,14 @@
 package Trabalho_de_Graduacao.Mesa_do_Campo_Back.Controller;
 
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.CadastroVendedorDTO;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.TopProdutoDTO;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.VendasMensaisDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.VendedorDTO;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.DTO.External.ReturnModel;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Enum.CategoriaProduto;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Enum.StatusPedido;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.ItemPedido;
+import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Produto;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Entities.Vendedor;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.VendedorService;
 import Trabalho_de_Graduacao.Mesa_do_Campo_Back.Service.Security.HybridEncrypted;
@@ -64,7 +70,8 @@ public class VendedorController {
         return ResponseEntity.ok(vendedorService.getByIdVendedor(idUsuarioAuth));
     }
 
-    @Operation(summary = "Lista todos os vendedores", description = "Endpoint público, usado para exibir o nome do vendedor de um produto no catálogo.")
+    @Operation(summary = "Lista todos os vendedores",
+            description = "Endpoint público, usado para exibir o nome do vendedor de um produto no catálogo.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReturnModel.class),

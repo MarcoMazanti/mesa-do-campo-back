@@ -121,8 +121,8 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.getAllMethodOfPayments(idUsuarioAuth));
     }
 
-    @GetMapping("/reset/password")
-    public ResponseEntity<Void> resetPassword(@RequestParam("email") String email) {
+    @GetMapping("/reset/password/{email}")
+    public ResponseEntity<Void> resetPassword(@PathVariable("email") String email) {
         clienteService.resetPassword(email);
         return ResponseEntity.ok().build();
     }

@@ -35,7 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/avaliacao/all",
                         "/api/cliente/create",
                         "/api/cliente/login",
-                        "/api/cliente/reset/password",
+                        "/api/cliente/reset/password/**",
                         "/api/produto/unique/**",
                         "/api/produto/vendedor/**",
                         "/api/produto/categoria/**",
